@@ -1,2 +1,2 @@
-# mochita
+# Mochita
 ✨ Mochita: a cat companion to help you meet your self-care goals ✨
