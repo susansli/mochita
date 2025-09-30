@@ -1,15 +1,25 @@
-import { Text, View } from "react-native";
+import { Link } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 
-export default function Tutorial() {
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    color: "blue",
+    textDecorationLine: "underline",
+  },
+});
+
+export default function NotFound() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Tutorial</Text>
+    <View style={styles.body}>
+      <Text>{`404. You're not supposed to be here...`}</Text>
+      <Link style={styles.button} href={"/"}>
+        Link to home
+      </Link>
     </View>
   );
 }
