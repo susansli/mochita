@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { withPageWrapper } from "../util/withPageWrapper";
 
 const styles = StyleSheet.create({
   button: {
@@ -8,7 +9,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Index() {
+function Index() {
   return (
     <View
       style={{
@@ -24,3 +25,5 @@ export default function Index() {
     </View>
   );
 }
+
+export default withPageWrapper(Index);

@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { withPageWrapper } from "../util/withPageWrapper";
 
 const styles = StyleSheet.create({
   body: {
@@ -8,10 +9,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function Tutorial() {
+function Tutorial() {
   return (
     <View style={styles.body}>
       <Text>Tutorial Page</Text>
     </View>
   );
 }
+
+export default withPageWrapper(Tutorial);
