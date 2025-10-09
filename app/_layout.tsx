@@ -6,21 +6,15 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="pages/index"
         options={{
           headerTitle: "Mochita",
         }}
       />
       <Stack.Screen
-        name="tutorial"
+        name="pages/tutorial"
         options={{
           headerTitle: "Tutorial",
-        }}
-      />
-      <Stack.Screen
-        name="+not-found"
-        options={{
-          headerTitle: "404: Not Found",
         }}
       />
     </Stack>

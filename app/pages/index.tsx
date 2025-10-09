@@ -18,7 +18,7 @@ export default function Index() {
       }}
     >
       <Text>This is Mochita!</Text>
-      <Link style={styles.button} href={"/tutorial"}>
+      <Link style={styles.button} href={"/pages/tutorial"}>
         Link to the tutorial
       </Link>
     </View>
