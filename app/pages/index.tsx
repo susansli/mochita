@@ -1,25 +1,13 @@
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { withPageWrapper } from "../util/withPageWrapper";
-
-const styles = StyleSheet.create({
-  button: {
-    color: "blue",
-    textDecorationLine: "underline",
-  },
-});
+import { Text, View } from "react-native";
+import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
+import "../../styles/global.css";
 
 function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>This is Mochita!</Text>
-      <Link style={styles.button} href={"/pages/tutorial"}>
+    <View className="items-center justify-center bg-white">
+      <Text className="text-xl font-bold text-blue-500">This is Mochita!</Text>
+      <Link className="text-red-500" href={"/pages/tutorial"}>
         Link to the tutorial
       </Link>
     </View>

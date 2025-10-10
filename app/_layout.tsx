@@ -8,13 +8,13 @@ export default function RootLayout() {
       <Stack.Screen
         name="pages/index"
         options={{
-          headerTitle: "Mochita",
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="pages/tutorial"
         options={{
-          headerTitle: "Tutorial",
+          headerTitle: "Tutorial"
         }}
       />
     </Stack>

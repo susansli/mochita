@@ -1,7 +1,7 @@
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   children?: React.ReactNode;

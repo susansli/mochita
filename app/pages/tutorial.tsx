@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { withPageWrapper } from "../util/withPageWrapper";
+import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 
 const styles = StyleSheet.create({
   body: {
