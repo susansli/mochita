@@ -1,19 +1,20 @@
-import { Text } from '@/components/ui/text';
-import { Link } from "expo-router";
+import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { Text } from "@/components/ui/text";
+import { Link, useFocusEffect } from "expo-router";
+import { useSetAtom } from "jotai";
+import { useCallback} from "react";
 import { View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import "../../global.css";
-import { useSetAtom } from 'jotai';
-import { isNavbarHiddenAtom } from '@/atoms/navAtoms';
-import { useEffect } from 'react';
 
 function Index() {
-
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
 
-  useEffect(() => {
-    setIsNavbarHidden(true);
-  }, []); 
+  useFocusEffect(
+    useCallback(() => {
+      setIsNavbarHidden(true);
+    }, [setIsNavbarHidden])
+  );
 
   return (
     <View className="items-center justify-center bg-white">
