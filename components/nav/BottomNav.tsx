@@ -10,8 +10,8 @@ export default function BottomNav() {
   }
 
   return (
-    <View className="flex justify-between p-2 w-full h-16 m-2 bg-white rounded-lg shadow z-50">
-        {renderBottomNavIcons() }
+    <View className="flex-row justify-between px-7 py-3 w-full bg-white rounded-2xl shadow">
+        {renderBottomNavIcons()}
     </View>
   );
 }
