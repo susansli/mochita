@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from "react-native-safe-area-context";
+import BottomNav from "../nav/BottomNav";
 
 interface Props {
   children?: React.ReactNode;
@@ -20,6 +21,7 @@ export default function PageWrapper(props: Props) {
         <GestureHandlerRootView style={styles.body}>
             <SafeAreaView>
                 {props?.children}
+                <BottomNav />
             </SafeAreaView>
         </GestureHandlerRootView>
     );

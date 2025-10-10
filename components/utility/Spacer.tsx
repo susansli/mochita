@@ -1,5 +1,7 @@
+import { View } from "react-native";
+
 export default function Spacer() {
     return (
-        <div className="flex-1" />
+        <View className="flex-1" />
     );
 }
