@@ -1,14 +1,17 @@
 import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
-import { useCallback} from "react";
-import { View } from "react-native";
+import { useCallback } from "react";
+import { Image, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import "../../global.css";
 
 function Index() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
+
+  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -17,11 +20,23 @@ function Index() {
   );
 
   return (
-    <View className="items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">This is Mochita!</Text>
-      <Link className="text-red-500" href={"/pages/tutorial"}>
-        Link to the tutorial
-      </Link>
+    <View className="flex-col justify-center items-center w-screen h-screen">
+      <Image
+        source={{ uri: "https://i.imgur.com/mx0wroQ.png" }}
+        className="h-60 w-full mb-10"
+        resizeMode="contain"
+      />
+      <Text className="text-xl font-bold mb-10">mochita: a self-care game</Text>
+
+      <Button variant="outline" disabled className="w-60 h-12 mb-3">
+        <Text>Continue</Text>
+      </Button>
+      <Button
+        className="w-60 h-12"
+        onTouchEnd={() => router.push("/pages/tutorial")}
+      >
+        <Text>New Game</Text>
+      </Button>
     </View>
   );
 }
