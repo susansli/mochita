@@ -1,7 +1,9 @@
 import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-import "../../styles/global.css";
+import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/text';
+import "../../global.css";
 
 function Index() {
   return (
@@ -10,6 +12,9 @@ function Index() {
       <Link className="text-red-500" href={"/pages/tutorial"}>
         Link to the tutorial
       </Link>
+      <Button variant="destructive">
+      <Text>Button Test</Text>
+    </Button>
     </View>
   );
 }

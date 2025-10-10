@@ -1,22 +1,29 @@
+import { ThemeProvider } from "@react-navigation/native";
+import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
+import { Platform } from "react-native";
+import { NAV_THEME } from "../lib/theme";
 
-// Index is the entrypoint to the app
+// Directive to make RNU doctor happy
+if (Platform.OS === "web") {
+  require("../global.css");
+}
+
+// Index is the entrypoint to the app (like App.tsx)
 
 export default function RootLayout() {
+  const colorScheme = "light";
+
   return (
-    <Stack>
-      <Stack.Screen
-        name="pages/index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="pages/tutorial"
-        options={{
-          headerTitle: "Tutorial"
-        }}
-      />
-    </Stack>
+    <ThemeProvider value={NAV_THEME[colorScheme]}>
+      <Stack>
+        <Stack.Screen name="pages/index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="pages/tutorial"
+          options={{ headerTitle: "Tutorial" }}
+        />
+      </Stack>
+      <PortalHost />
+    </ThemeProvider>
   );
 }
