@@ -2,7 +2,6 @@ import { isNavbarCollapsedAtom } from "@/atoms/navAtoms";
 import { bottomNavData } from "@/data/data";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "../ui/text";
 import Spacer from "../utility/Spacer";
@@ -12,12 +11,6 @@ export default function BottomNav() {
   const [isNavBarCollapsed, setIsNavBarCollapsed] = useAtom<boolean>(
     isNavbarCollapsedAtom
   );
-
-  useEffect(() => {
-    return () => {
-      setIsNavBarCollapsed(true);
-    };
-  }, []);
 
 //   Race condition with Nativewind shadows
   const styles = StyleSheet.create({
