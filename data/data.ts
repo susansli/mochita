@@ -18,7 +18,7 @@ export const bottomNavData: BottomNavData[] = [
     label: "Travel",
   },
   {
-    name: "plus",
-    label: "More",
+    name: "chevron-right",
+    label: "Back",
   },
 ];
