@@ -18,10 +18,7 @@ export default function RootLayout() {
     <ThemeProvider value={NAV_THEME[colorScheme]}>
       <Stack>
         <Stack.Screen name="pages/index" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="pages/tutorial"
-          options={{ headerTitle: "Tutorial" }}
-        />
+        <Stack.Screen name="pages/tutorial" options={{ headerShown: false }} />
       </Stack>
       <PortalHost />
     </ThemeProvider>

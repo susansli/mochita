@@ -1,17 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  }
-});
+import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { useSetAtom } from "jotai";
+import { useEffect } from "react";
 
 function Tutorial() {
+
+  const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
+  
+    useEffect(() => {
+      setIsNavbarHidden(false);
+    }, []); 
+
+    
   return (
-    <View style={styles.body}>
+    <View>
       <Text>Tutorial Page</Text>
     </View>
   );

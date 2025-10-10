@@ -1,7 +1,13 @@
+import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { useAtomValue } from "jotai";
 import React from "react";
 import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { EdgeInsets, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  EdgeInsets,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import BottomNav from "../nav/BottomNav";
 
 interface Props {
@@ -9,12 +15,14 @@ interface Props {
 }
 
 export default function PageWrapper(props: Props) {
-  
   const insets: EdgeInsets = useSafeAreaInsets();
+  const isNavbarHidden = useAtomValue<boolean>(isNavbarHiddenAtom);
 
-  function renderBottomNav(): React.ReactNode {
-    return (
-      <View
+  return (
+    <GestureHandlerRootView className="w-full h-full">
+      <SafeAreaView className="flex-1" edges={["top", "left", "right"]}>
+        {props?.children}
+        <View
         pointerEvents="box-none"
         className="absolute left-0 right-0 bottom-0 z-50"
       >
@@ -22,17 +30,9 @@ export default function PageWrapper(props: Props) {
           style={{ paddingBottom: Math.max(insets.bottom, 8) }}
           className="px-5"
         >
-          <BottomNav />
+          {!isNavbarHidden && <BottomNav />}
         </View>
       </View>
-    );
-  }
-
-  return (
-    <GestureHandlerRootView className="w-full h-full">
-      <SafeAreaView className="flex-1" edges={["top", "left", "right"]}>
-        {props?.children}
-        {renderBottomNav()}
       </SafeAreaView>
     </GestureHandlerRootView>
   );
