@@ -16,23 +16,26 @@ interface Props {
 
 export default function PageWrapper(props: Props) {
   const insets: EdgeInsets = useSafeAreaInsets();
+
   const isNavbarHidden = useAtomValue<boolean>(isNavbarHiddenAtom);
 
   return (
-    <GestureHandlerRootView className="w-full h-full">
+    <GestureHandlerRootView className="flex-1">
       <SafeAreaView className="flex-1" edges={["top", "left", "right"]}>
         {props?.children}
         <View
-        pointerEvents="box-none"
-        className="absolute left-0 right-0 bottom-0 z-50"
-      >
-        <View
-          style={{ paddingBottom: Math.max(insets.bottom, 8) }}
-          className="px-5"
+          pointerEvents="box-none"
+          className="absolute left-0 right-0 bottom-0 z-50"
         >
-          {!isNavbarHidden && <BottomNav />}
+          {!isNavbarHidden && (
+            <View
+              style={{ paddingBottom: Math.max(insets.bottom, 8) }}
+              className="px-5"
+            >
+              <BottomNav />
+            </View>
+          )}
         </View>
-      </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );

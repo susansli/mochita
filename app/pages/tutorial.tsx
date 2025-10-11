@@ -1,22 +1,25 @@
-import { Text, View } from "react-native";
-import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
-import { useSetAtom } from "jotai";
-import { useCallback } from "react";
+import TopStatusBar from "@/components/status/TopStatusBar";
 import { useFocusEffect } from "expo-router";
+import { useSetAtom } from "jotai";
+import { useCallback, useState } from "react";
+import { View } from "react-native";
+import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
+  const [isTopStatusHidden, setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
       setIsNavbarHidden(false);
-    }, [setIsNavbarHidden])
+      setIsTopStatusHidden(false);
+    }, [setIsNavbarHidden, setIsTopStatusHidden])
   );
 
   return (
-    <View>
-      <Text>Tutorial Page</Text>
+    <View className="flex-1">
+      {!isTopStatusHidden && <TopStatusBar />}
     </View>
   );
 }

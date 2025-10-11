@@ -1,8 +1,8 @@
+import { isNavbarCollapsedAtom } from "@/atoms/navAtoms";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useSetAtom } from "jotai";
 import { View } from "react-native";
 import { Text } from "../ui/text";
-import { useSetAtom } from "jotai";
-import { isNavbarCollapsedAtom } from "@/atoms/navAtoms";
 
 interface Props {
   name: string;
@@ -23,7 +23,7 @@ export default function BottomNavIcon(props: Props) {
         }
       }}
     >
-      <FontAwesome name={props.name as FAName} size={20} color="blue" />
+      <FontAwesome name={props.name as FAName} size={20} color="teal" />
       <Text className="text-xs">{props.label}</Text>
     </View>
   );

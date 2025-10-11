@@ -20,7 +20,7 @@ function Index() {
   );
 
   return (
-    <View className="flex-col justify-center items-center w-screen h-screen">
+    <View className="justify-center items-center flex-1">
       <Image
         source={{ uri: "https://i.imgur.com/mx0wroQ.png" }}
         className="h-60 w-full mb-10"

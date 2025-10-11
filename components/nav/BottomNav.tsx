@@ -63,7 +63,7 @@ export default function BottomNav() {
             className="flex-col gap-2 justify-center items-center"
             onTouchEnd={() => setIsNavBarCollapsed(false)}
           >
-            <FontAwesome name={"chevron-left"} size={20} color="blue" />
+            <FontAwesome name={"chevron-left"} size={20} color="teal" />
             <Text className="text-xs">Menu</Text>
           </View>
         </View>
