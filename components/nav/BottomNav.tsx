@@ -6,11 +6,14 @@ import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "../ui/text";
 import Spacer from "../utility/Spacer";
 import BottomNavIcon from "./BottomNavIcon";
+import { useRouter } from "expo-router";
 
 export default function BottomNav() {
   const [isNavBarCollapsed, setIsNavBarCollapsed] = useAtom<boolean>(
     isNavbarCollapsedAtom
   );
+
+  const router = useRouter();
 
 //   Race condition with Nativewind shadows
   const styles = StyleSheet.create({
