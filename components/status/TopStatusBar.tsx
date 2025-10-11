@@ -5,6 +5,7 @@ import { useAtomValue } from "jotai";
 import { View } from "react-native";
 import { Text } from "../ui/text";
 import { topStatusBarData } from "@/data/data";
+import TopStatusBarItem from "./TopStatusBarItem";
 
 export default function TopStatusBar() {
 
@@ -26,15 +27,9 @@ export default function TopStatusBar() {
     return (
         <View className="bg-teal-500 w-full p-5 rounded-b-lg">
             <View className="flex-row gap-2 mb-4">
-                <View className="bg-white p-2 rounded-lg">
-                    <Text>{`✨ Day: 0${topStatusBarData.day}`}</Text>
-                </View>
-                <View className="bg-white p-2 rounded-lg">
-                    <Text>{`☀️ ${topStatusBarData.weather}`}</Text>
-                </View>
-                <View className="bg-white p-2 rounded-lg">
-                    <Text>{`🌱 Sprouts: ${currentSprouts}`}</Text>
-                </View>
+                <TopStatusBarItem key={1} text={`✨ Day: 0${topStatusBarData.day}`} />
+                <TopStatusBarItem key={2} text={`☀️ ${topStatusBarData.weather}`} />
+                <TopStatusBarItem key={3} text={`🌱 Sprouts: ${currentSprouts}`} />
             </View>
             <View className="flex-row gap-1">
                 {renderHappinessHearts()}
