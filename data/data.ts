@@ -1,4 +1,4 @@
-import { BottomNavData } from "./dataInterfaces";
+import { BottomNavData, TopStatusBarData } from "./dataInterfaces";
 
 export const bottomNavData: BottomNavData[] = [
   {
@@ -22,3 +22,10 @@ export const bottomNavData: BottomNavData[] = [
     label: "Back",
   },
 ];
+
+export const topStatusBarData: TopStatusBarData = {
+  currentHappiness: 3,
+  day: 1,
+  weather: "Sunny",
+  sprouts: 25
+};

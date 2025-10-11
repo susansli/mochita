@@ -1,4 +1,7 @@
-import { DEFAULT_HAPPINESS } from "@/util/constants";
+import { topStatusBarData } from "@/data/data";
 import { atom } from "jotai";
 
-export const topStatusHappinessAtom = atom<number>(DEFAULT_HAPPINESS);
+// placeholder data!
+
+export const topStatusHappinessAtom = atom<number>(topStatusBarData.currentHappiness);
+export const topStatusSproutsAtom = atom<number>(topStatusBarData.sprouts);
