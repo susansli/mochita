@@ -8,6 +8,7 @@ export const bottomNavData: BottomNavData[] = [
   {
     name: "star",
     label: "Goals",
+    link: "/pages/goals"
   },
   {
     name: "shopping-bag",
@@ -29,3 +30,4 @@ export const topStatusBarData: TopStatusBarData = {
   weather: "Sunny",
   sprouts: 25
 };
+

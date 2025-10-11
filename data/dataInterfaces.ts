@@ -1,6 +1,7 @@
 export interface BottomNavData {
     name: string;
     label: string;
+    link?: string;
 }
 
 export interface TopStatusBarData {
