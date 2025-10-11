@@ -30,4 +30,3 @@ export const topStatusBarData: TopStatusBarData = {
   weather: "Sunny",
   sprouts: 25
 };
-

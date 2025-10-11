@@ -1,3 +1,4 @@
+import { goalsListAtom } from "@/atoms/goalsAtoms";
 import GoalsCard from "@/components/goals/GoalsCard";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -6,10 +7,18 @@ import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
+import { useAtomValue } from "jotai";
 import { View } from "react-native";
 
 function Goals() {
   const router = useRouter();
+  const goalsList = useAtomValue(goalsListAtom);
+
+  function renderGoalsList() {
+    return goalsList.map((goal, i) => {
+      return <GoalsCard key={i} data={goal} />;
+    });
+  }
 
   return (
     <View className="flex-1 bg-stone-200 p-5">
@@ -18,11 +27,7 @@ function Goals() {
           className="px-3 py-2 rounded-full bg-stone-300 justify-center items-center"
           onTouchEnd={() => router.back()}
         >
-          <FontAwesome
-            name={"chevron-left"}
-            size={20}
-            color="teal"
-          />
+          <FontAwesome name={"chevron-left"} size={20} color="teal" />
         </View>
         <Spacer />
         <Text className="text-2xl text-teal-700 font-medium">Goal Setting</Text>
@@ -49,9 +54,12 @@ function Goals() {
       </View>
 
       <View>
-        <GoalsCard goal="Drink 7 glasses of water today! Drink 7 glasses of water today!" isComplete={true} />
+        {goalsList.length ? (
+          renderGoalsList()
+        ) : (
+          <Text className="p-5 rounded-xl bg-stone-300 text-stone-500 text-center">✨ No goals... yet ✨</Text>
+        )}
       </View>
-
     </View>
   );
 }

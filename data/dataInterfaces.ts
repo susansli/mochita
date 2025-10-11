@@ -10,3 +10,9 @@ export interface TopStatusBarData {
     weather: string;
     sprouts: number;
 }
+
+export interface GoalCardData {
+    index: number;
+    goal: string;
+    isComplete: boolean;
+}
