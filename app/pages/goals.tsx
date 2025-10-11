@@ -1,3 +1,4 @@
+import GoalsCard from "@/components/goals/GoalsCard";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import Hr from "@/components/utility/Hr";
@@ -12,13 +13,16 @@ function Goals() {
 
   return (
     <View className="flex-1 bg-stone-200 p-5">
-
       <View className="flex-row justify-center items-center">
-        <View 
+        <View
           className="px-3 py-2 rounded-full bg-stone-300 justify-center items-center"
           onTouchEnd={() => router.back()}
         >
-          <FontAwesome name={"chevron-left"} size={20} color="teal" onTouchEnd={() => router.back()} />
+          <FontAwesome
+            name={"chevron-left"}
+            size={20}
+            color="teal"
+          />
         </View>
         <Spacer />
         <Text className="text-2xl text-teal-700 font-medium">Goal Setting</Text>
@@ -37,6 +41,16 @@ function Goals() {
 
       <Hr color="border-gray-400" />
 
+      <View className="flex-row mb-5">
+        <Spacer />
+        <Button className="bg-teal-600">
+          <Text className="w-20 text-center">+ Create</Text>
+        </Button>
+      </View>
+
+      <View>
+        <GoalsCard goal="Drink 7 glasses of water today! Drink 7 glasses of water today!" isComplete={true} />
+      </View>
 
     </View>
   );
