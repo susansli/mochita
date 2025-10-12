@@ -1,4 +1,4 @@
-import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
 import TopStatusBar from "@/components/status/TopStatusBar";
 import { useFocusEffect } from "expo-router";
 import { useSetAtom } from "jotai";
@@ -8,13 +8,17 @@ import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
-  const [isTopStatusHidden, setIsTopStatusHidden] = useState<boolean>(false);
+  const setIsNavbarCollapsed = useSetAtom(isNavbarCollapsedAtom);
+  const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
       setIsNavbarHidden(false);
-      setIsTopStatusHidden(false);
-    }, [setIsNavbarHidden, setIsTopStatusHidden])
+      return () => {
+        setIsNavbarHidden(true);
+        setIsNavbarCollapsed(true);
+      };
+    }, [setIsNavbarHidden, setIsNavbarCollapsed])
   );
 
   return (

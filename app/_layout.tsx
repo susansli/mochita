@@ -3,6 +3,8 @@ import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
 import { NAV_THEME } from "../lib/theme";
+import 'react-native-gesture-handler'; // if you use RNGH (Reusables does)
+import 'react-native-reanimated';
 
 // Directive to make RNU doctor happy
 if (Platform.OS === "web") {
