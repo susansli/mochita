@@ -25,8 +25,8 @@ export const bottomNavData: BottomNavData[] = [
 ];
 
 export const topStatusBarData: TopStatusBarData = {
-  currentHappiness: 3,
+  currentHappiness: 2,
   day: 1,
   weather: "Sunny",
-  sprouts: 25
+  sprouts: 0
 };

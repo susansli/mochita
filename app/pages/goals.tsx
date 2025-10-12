@@ -49,7 +49,7 @@ function Goals() {
 
       <CreateGoals />
 
-      <View>
+      <View className="gap-3">
         {goalsList.length ? (
           renderGoalsList()
         ) : (
