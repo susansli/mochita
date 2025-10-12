@@ -1,4 +1,5 @@
 import { goalsListAtom } from "@/atoms/goalsAtoms";
+import CreateGoals from "@/components/goals/CreateGoals";
 import GoalsCard from "@/components/goals/GoalsCard";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -46,12 +47,7 @@ function Goals() {
 
       <Hr color="border-gray-400" />
 
-      <View className="flex-row mb-5">
-        <Spacer />
-        <Button className="bg-teal-600">
-          <Text className="w-20 text-center">+ Create</Text>
-        </Button>
-      </View>
+      <CreateGoals />
 
       <View>
         {goalsList.length ? (
