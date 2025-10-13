@@ -13,6 +13,7 @@ export const bottomNavData: BottomNavData[] = [
   {
     name: "shopping-bag",
     label: "Bag",
+    link: "/pages/bag"
   },
   {
     name: "map-marker",
