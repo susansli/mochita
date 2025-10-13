@@ -1,3 +1,5 @@
+import { ItemType } from "@/util/enums";
+
 export interface BottomNavData {
     name: string;
     label: string;
@@ -15,4 +17,20 @@ export interface GoalCardData {
     index: number;
     goal: string;
     isComplete: boolean;
+}
+
+export interface StoreItemCardData {
+    imgUrl: string;
+    type: ItemType;
+    sproutCost: number;
+    name: string;
+    happiness?: number;
+}
+
+export interface BagItemCardData {
+    imgUrl: string;
+    type: ItemType;
+    qty: number;
+    name: string;
+    happiness?: number;
 }
