@@ -19,18 +19,11 @@ export interface GoalCardData {
     isComplete: boolean;
 }
 
-export interface StoreItemCardData {
+export interface ItemCardData {
+    name: string;
     imgUrl: string;
     type: ItemType;
-    sproutCost: number;
-    name: string;
-    happiness?: number;
-}
-
-export interface BagItemCardData {
-    imgUrl: string;
-    type: ItemType;
-    qty: number;
-    name: string;
+    sproutCost?: number;
+    qty?: number;
     happiness?: number;
 }

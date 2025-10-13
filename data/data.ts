@@ -1,7 +1,7 @@
 import { ItemType } from "@/util/enums";
 import {
   BottomNavData,
-  StoreItemCardData,
+  ItemCardData,
   TopStatusBarData,
 } from "./dataInterfaces";
 
@@ -37,7 +37,7 @@ export const topStatusBarData: TopStatusBarData = {
   sprouts: 0,
 };
 
-export const storeItemsList: StoreItemCardData[] = [
+export const storeItemsList: ItemCardData[] = [
   {
     imgUrl: "https://i.imgur.com/aQTw3oT.png",
     type: ItemType.TICKET,
@@ -81,7 +81,7 @@ export const storeItemsList: StoreItemCardData[] = [
     name: "Taiyaki",
   },
   {
-    imgUrl: "https://imgur.com/a/wQr0jYR",
+    imgUrl: "https://i.imgur.com/fPq9ZjK.png",
     type: ItemType.TREAT,
     sproutCost: 2,
     name: "Nigiri Toy",
