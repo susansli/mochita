@@ -42,7 +42,7 @@ export const storeItemsList: ItemCardData[] = [
     imgUrl: "https://i.imgur.com/aQTw3oT.png",
     type: ItemType.TICKET,
     sproutCost: 15,
-    name: "Nyanlines Airfare",
+    name: "Airline Ticket",
   },
   {
     imgUrl: "https://i.imgur.com/8sRVZeg.png",
