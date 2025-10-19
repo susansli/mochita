@@ -27,3 +27,7 @@ export interface ItemCardData {
     qty?: number;
     happiness?: number;
 }
+
+export interface EquippedItems {
+    [key: string] : ItemCardData;
+}
