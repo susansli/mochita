@@ -22,6 +22,7 @@ export default function RootLayout() {
         <Stack.Screen name="pages/index" options={{ headerShown: false }} />
         <Stack.Screen name="pages/tutorial" options={{ headerShown: false }} />
         <Stack.Screen name="pages/goals" options={{ headerShown: false }} />
+        <Stack.Screen name="pages/bag" options={{ headerShown: false }} />
       </Stack>
       <PortalHost />
     </ThemeProvider>
