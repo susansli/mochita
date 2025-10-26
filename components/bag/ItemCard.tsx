@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 import BuyItemModal from "./BuyItemModal";
+import { returnItemType } from "@/util/helpers";
 
 interface Props {
   item: ItemCardData;
@@ -13,27 +14,12 @@ interface Props {
 export default function ItemCard(props: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
-  function returnItemType(): string {
-    switch (props.item.type) {
-      case ItemType.BAG:
-        return "Bag";
-      case ItemType.LUCKY_CHARM:
-        return "Charm";
-      case ItemType.SNACK:
-        return "Snack";
-      case ItemType.TICKET:
-        return "Ticket";
-      default:
-        return "Treat";
-    }
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Pressable className="rounded-lg bg-white justify-center items-center">
           <View className="mt-2 w-16 p-2 bg-teal-300 mr-[5.6rem] rounded-r-lg">
-            <Text className="text-xs text-nowrap">{returnItemType()}</Text>
+            <Text className="text-xs text-nowrap">{returnItemType(props.item.type)}</Text>
           </View>
           <Image
             source={{ uri: props.item.imgUrl }}
@@ -50,7 +36,7 @@ export default function ItemCard(props: Props) {
           </View>
         </Pressable>
       </DialogTrigger>
-      <BuyItemModal />
+      <BuyItemModal item={props.item} />
     </Dialog>
   );
 }
