@@ -36,7 +36,7 @@ export default function ItemCard(props: Props) {
           </View>
         </Pressable>
       </DialogTrigger>
-      <BuyItemModal item={props.item} />
+      <BuyItemModal item={props.item} setClose={() => setOpen(false)} />
     </Dialog>
   );
 }

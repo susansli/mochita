@@ -12,16 +12,56 @@ import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
 import { useAtom } from "jotai";
 import { Image, View } from "react-native";
+import { Easing, Notifier, NotifierComponents } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 
 interface Props {
   item: ItemCardData;
+  setClose: () => void;
 }
 
 export default function BuyItemModal(props: Props) {
   const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
+
+  function buyItem() {
+    if (props?.item?.sproutCost && props.item.sproutCost <= sprouts) {
+      const newInventory = [...inventory];
+      const itemIndex = newInventory.findIndex(
+        (item) => item.name === props.item.name && item.qty && item.qty++
+      );
+      if (itemIndex < 0) {
+        newInventory.push(props.item);
+      }
+      setInventory(newInventory);
+      setSprouts(sprouts - props.item.sproutCost);
+      props.setClose();
+      Notifier.showNotification({
+        title: `Purchased ${returnItemType(props.item.type)}!`,
+        description: `The item was added to your inventory for ${props.item.sproutCost} 🌱!`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+        Component: NotifierComponents.Alert,
+        componentProps: {
+          alertType: "success",
+        },
+      });
+    } else {
+      props.setClose();
+      Notifier.showNotification({
+        title: `Failed to Purchase ${returnItemType(props.item.type)}...`,
+        description: `You don't have enough sprouts to make this purchase.`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+        hideOnPress: true,
+        Component: NotifierComponents.Alert,
+        componentProps: {
+          alertType: "error",
+        },
+      });
+    }
+  }
 
   return (
     <DialogContent className="sm">
@@ -49,8 +89,11 @@ export default function BuyItemModal(props: Props) {
             <Text>Cancel</Text>
           </Button>
         </DialogClose>
-        <Button>
-          <Text>Save changes</Text>
+        <Button
+          disabled={props?.item?.sproutCost && props.item.sproutCost > sprouts ? true : false}
+          onTouchEnd={buyItem}
+        >
+          <Text>Make Purchase</Text>
         </Button>
       </DialogFooter>
     </DialogContent>
