@@ -1,11 +1,10 @@
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { ItemCardData } from "@/data/dataInterfaces";
-import { ItemType } from "@/util/enums";
+import { returnItemType } from "@/util/helpers";
 import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 import BuyItemModal from "./BuyItemModal";
-import { returnItemType } from "@/util/helpers";
 
 interface Props {
   item: ItemCardData;
@@ -31,12 +30,12 @@ export default function ItemCard(props: Props) {
               {props.item.name}
             </Text>
             <Text className="text-sm color-white text-center">
-              {`${props.item.sproutCost} 🌱`}
+              {props.item?.sproutCost ? `${props.item.sproutCost} 🌱` : `${props.item.qty} 🎒`}
             </Text>
           </View>
         </Pressable>
       </DialogTrigger>
       <BuyItemModal item={props.item} setClose={() => setOpen(false)} />
     </Dialog>
-  );
+  ); 
 }

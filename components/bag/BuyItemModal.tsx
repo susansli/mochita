@@ -32,7 +32,18 @@ export default function BuyItemModal(props: Props) {
         (item) => item.name === props.item.name && item.qty && item.qty++
       );
       if (itemIndex < 0) {
-        newInventory.push(props.item);
+        const newItem: ItemCardData = {
+          name: props.item.name,
+          imgUrl: props.item.imgUrl,
+          type: props.item.type,
+          qty: 1,
+          ...(props.item.happiness != null
+            ? { happiness: props.item.happiness }
+            : {}),
+        };
+
+        newItem.sproutCost && delete newItem.sproutCost;
+        newInventory.push(newItem);
       }
       setInventory(newInventory);
       setSprouts(sprouts - props.item.sproutCost);
@@ -90,7 +101,11 @@ export default function BuyItemModal(props: Props) {
           </Button>
         </DialogClose>
         <Button
-          disabled={props?.item?.sproutCost && props.item.sproutCost > sprouts ? true : false}
+          disabled={
+            props?.item?.sproutCost && props.item.sproutCost > sprouts
+              ? true
+              : false
+          }
           onTouchEnd={buyItem}
         >
           <Text>Make Purchase</Text>
