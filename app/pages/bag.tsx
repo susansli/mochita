@@ -7,7 +7,7 @@ import { Text } from "@/components/ui/text";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
 import { storeItemsList } from "@/data/data";
 import { ItemCardData } from "@/data/dataInterfaces";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 
@@ -17,22 +17,22 @@ function Bag() {
     INVENTORY,
   }
 
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
+  const inventory = useAtomValue<ItemCardData[]>(inventoryItemsAtom);
   const [active, setActive] = useState<ActiveBagPage>(ActiveBagPage.STORE);
 
   function renderItemCards() {
     if (active === ActiveBagPage.STORE) {
       return storeItemsList.map((item, i) => (
-          <View key={i} className="w-1/2 p-2">
-            <ItemCard item={item} />
-          </View>
-        ));
+        <View key={i} className="w-1/2 p-2">
+          <ItemCard item={item} />
+        </View>
+      ));
     } else {
       return inventory.map((item, i) => (
-          <View key={i} className="w-1/2 p-2">
-            <ItemCard item={item} />
-          </View>
-        ));
+        <View key={i} className="w-1/2 p-2">
+          <ItemCard item={item} />
+        </View>
+      ));
     }
   }
 
@@ -47,13 +47,21 @@ function Bag() {
           className={`w-[48%] ${active === ActiveBagPage.STORE ? "bg-teal-700" : "bg-stone-300"}`}
           onTouchEnd={() => setActive(ActiveBagPage.STORE)}
         >
-          <Text className="text-white text-center">Store</Text>
+          <Text
+            className={`text-center ${active === ActiveBagPage.STORE ? "text-white" : "text-gray-400"}`}
+          >
+            Store
+          </Text>
         </Button>
         <Button
           className={`w-[48%] ${active === ActiveBagPage.INVENTORY ? "bg-teal-700" : "bg-stone-300"}`}
           onTouchEnd={() => setActive(ActiveBagPage.INVENTORY)}
         >
-          <Text className="text-gray-400 text-center">Inventory</Text>
+          <Text
+             className={`text-center ${active === ActiveBagPage.INVENTORY ? "text-white" : "text-gray-400"}`}
+          >
+            Inventory
+          </Text>
         </Button>
       </View>
 
