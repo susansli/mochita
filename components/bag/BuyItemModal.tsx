@@ -12,7 +12,7 @@ import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
 import { useAtom } from "jotai";
 import { Image, View } from "react-native";
-import { Easing, Notifier, NotifierComponents } from "react-native-notifier";
+import { Easing, Notifier} from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 
@@ -53,10 +53,6 @@ export default function BuyItemModal(props: Props) {
         description: `The item was added to your inventory for ${props.item.sproutCost} 🌱!`,
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
-        Component: NotifierComponents.Alert,
-        componentProps: {
-          alertType: "success",
-        },
       });
     } else {
       props.setClose();
@@ -66,10 +62,6 @@ export default function BuyItemModal(props: Props) {
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
         hideOnPress: true,
-        Component: NotifierComponents.Alert,
-        componentProps: {
-          alertType: "error",
-        },
       });
     }
   }
