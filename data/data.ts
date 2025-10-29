@@ -79,11 +79,13 @@ export const storeItemsList: ItemCardData[] = [
     type: ItemType.TREAT,
     sproutCost: 2,
     name: "Taiyaki",
+    happiness: 1
   },
   {
     imgUrl: "https://i.imgur.com/fPq9ZjK.png",
     type: ItemType.TREAT,
     sproutCost: 2,
     name: "Nigiri Toy",
+    happiness: 1
   }
 ];

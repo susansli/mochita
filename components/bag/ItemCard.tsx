@@ -1,10 +1,11 @@
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { ItemCardData } from "@/data/dataInterfaces";
-import { ItemType } from "@/util/enums";
+import { returnItemType } from "@/util/helpers";
 import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 import BuyItemModal from "./BuyItemModal";
+import InventoryItemModal from "./InventoryItemModal";
 
 interface Props {
   item: ItemCardData;
@@ -13,27 +14,14 @@ interface Props {
 export default function ItemCard(props: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
-  function returnItemType(): string {
-    switch (props.item.type) {
-      case ItemType.BAG:
-        return "Bag";
-      case ItemType.LUCKY_CHARM:
-        return "Charm";
-      case ItemType.SNACK:
-        return "Snack";
-      case ItemType.TICKET:
-        return "Ticket";
-      default:
-        return "Treat";
-    }
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Pressable className="rounded-lg bg-white justify-center items-center">
           <View className="mt-2 w-16 p-2 bg-teal-300 mr-[5.6rem] rounded-r-lg">
-            <Text className="text-xs text-nowrap">{returnItemType()}</Text>
+            <Text className="text-xs text-nowrap">
+              {returnItemType(props.item.type)}
+            </Text>
           </View>
           <Image
             source={{ uri: props.item.imgUrl }}
@@ -45,12 +33,18 @@ export default function ItemCard(props: Props) {
               {props.item.name}
             </Text>
             <Text className="text-sm color-white text-center">
-              {`${props.item.sproutCost} 🌱`}
+              {props.item?.sproutCost
+                ? `${props.item.sproutCost} 🌱`
+                : `${props.item.qty} 🎒`}
             </Text>
           </View>
         </Pressable>
       </DialogTrigger>
-      <BuyItemModal />
+      {props.item?.qty ? (
+        <InventoryItemModal item={props.item} setClose={() => setOpen(false)} />
+      ) : (
+        <BuyItemModal item={props.item} setClose={() => setOpen(false)} />
+      )}
     </Dialog>
   );
 }
