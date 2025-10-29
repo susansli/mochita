@@ -1,13 +1,13 @@
 import { equippedItemsAtom } from "@/atoms/bagAtoms";
 import { EquippedItems } from "@/data/dataInterfaces";
 import { ItemType } from "@/util/enums";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { View } from "react-native";
 import BagSlot from "./BagSlot";
 
 export default function BagContents() {
 
-  const [equippedItems, setEquippedItems] = useAtom<EquippedItems>(equippedItemsAtom);
+  const equippedItems = useAtomValue<EquippedItems>(equippedItemsAtom);
 
   return (
     <View className="flex-row flex-wrap p-5 rounded-lg bg-teal-500 mt-7">
