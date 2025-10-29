@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 import BuyItemModal from "./BuyItemModal";
+import InventoryItemModal from "./InventoryItemModal";
 
 interface Props {
   item: ItemCardData;
@@ -18,7 +19,9 @@ export default function ItemCard(props: Props) {
       <DialogTrigger asChild>
         <Pressable className="rounded-lg bg-white justify-center items-center">
           <View className="mt-2 w-16 p-2 bg-teal-300 mr-[5.6rem] rounded-r-lg">
-            <Text className="text-xs text-nowrap">{returnItemType(props.item.type)}</Text>
+            <Text className="text-xs text-nowrap">
+              {returnItemType(props.item.type)}
+            </Text>
           </View>
           <Image
             source={{ uri: props.item.imgUrl }}
@@ -30,12 +33,18 @@ export default function ItemCard(props: Props) {
               {props.item.name}
             </Text>
             <Text className="text-sm color-white text-center">
-              {props.item?.sproutCost ? `${props.item.sproutCost} 🌱` : `${props.item.qty} 🎒`}
+              {props.item?.sproutCost
+                ? `${props.item.sproutCost} 🌱`
+                : `${props.item.qty} 🎒`}
             </Text>
           </View>
         </Pressable>
       </DialogTrigger>
-      <BuyItemModal item={props.item} setClose={() => setOpen(false)} />
+      {props.item?.qty ? (
+        <InventoryItemModal item={props.item} setClose={() => setOpen(false)} />
+      ) : (
+        <BuyItemModal item={props.item} setClose={() => setOpen(false)} />
+      )}
     </Dialog>
-  ); 
+  );
 }
