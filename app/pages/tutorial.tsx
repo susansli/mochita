@@ -1,25 +1,31 @@
+import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
 import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import MochitaSpeech from "@/components/home/MochitaSpeech";
 import TopStatusBar from "@/components/status/TopStatusBar";
 import { useFocusEffect } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
 import { Image, ImageBackground, StyleSheet, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-import MochitaSpeech from "@/components/home/MochitaSpeech";
+import { SPEECH_TIME } from "@/util/constants";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
   const setIsNavbarCollapsed = useSetAtom(isNavbarCollapsedAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
+
+
   const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
+      setTimeout(() => setMochitaSpeech(''), SPEECH_TIME);
       setIsNavbarHidden(false);
       return () => {
         setIsNavbarHidden(true);
         setIsNavbarCollapsed(true);
       };
-    }, [setIsNavbarHidden, setIsNavbarCollapsed])
+    }, [setIsNavbarHidden, setIsNavbarCollapsed, setMochitaSpeech])
   );
 
   return (
