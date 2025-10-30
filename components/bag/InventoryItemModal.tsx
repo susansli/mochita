@@ -1,12 +1,12 @@
 import { equippedItemsAtom, inventoryItemsAtom } from "@/atoms/bagAtoms";
-import { topStatusHappinessAtom } from "@/atoms/topStatusAtoms";
+import { topStatusHappinessAtom } from "@/atoms/homeAtoms";
 import {
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { EquippedItems, ItemCardData } from "@/data/dataInterfaces";
 import { ItemType } from "@/util/enums";

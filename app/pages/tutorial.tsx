@@ -3,8 +3,9 @@ import TopStatusBar from "@/components/status/TopStatusBar";
 import { useFocusEffect } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
-import { View, ImageBackground, StyleSheet, Image } from "react-native";
+import { Image, ImageBackground, StyleSheet, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
+import MochitaSpeech from "@/components/home/MochitaSpeech";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
@@ -22,7 +23,7 @@ function Tutorial() {
   );
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 relative">
       <ImageBackground
         source={{ uri: "https://i.imgur.com/WDcPERN.jpeg" }}
         resizeMode="cover"
@@ -30,6 +31,7 @@ function Tutorial() {
         imageStyle={{}}
       />
       {!isTopStatusHidden && <TopStatusBar />}
+      <MochitaSpeech />
       <Image
         source={{ uri: "https://i.imgur.com/n66Cu8e.gif" }}
         className="h-[60%] w-[60%] absolute mt-[85%] ml-[40%]"
