@@ -25,8 +25,12 @@ export default function BuyItemModal(props: Props) {
   const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
 
+  function isButtonDisabled() {
+    return (props?.item?.sproutCost && props.item.sproutCost > sprouts) || false;
+  }
+
   function buyItem() {
-    if (props?.item?.sproutCost && props.item.sproutCost > sprouts) {
+    if (isButtonDisabled()) {
       return;
     }
 
@@ -97,11 +101,7 @@ export default function BuyItemModal(props: Props) {
           </Button>
         </DialogClose>
         <Button
-          disabled={
-            props?.item?.sproutCost && props.item.sproutCost > sprouts
-              ? true
-              : false
-          }
+          disabled={isButtonDisabled()}
           onTouchEnd={buyItem}
         >
           <Text>Make Purchase</Text>
