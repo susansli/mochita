@@ -7,10 +7,10 @@ import { View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import {
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from "../ui/dialog";
 import { Text } from "../ui/text";
 
@@ -54,8 +54,8 @@ export default function CompleteGoalModal(props: Props) {
         <Button variant="outline" onTouchEnd={props.setClose}>
           <Text>Cancel</Text>
         </Button>
-        <Button onTouchEnd={markGoalAsComplete}>
-          <Text>Mark as Complete</Text>
+        <Button disabled={props.data.isComplete} onTouchEnd={() => !props.data.isComplete && markGoalAsComplete()}>
+          <Text>{`${props.data.isComplete ? "Goal Already Completed" : "Mark as Complete"}`}</Text>
         </Button>
       </DialogFooter>
     </DialogContent>

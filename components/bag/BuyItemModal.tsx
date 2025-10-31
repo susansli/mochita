@@ -26,6 +26,10 @@ export default function BuyItemModal(props: Props) {
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
 
   function buyItem() {
+    if (props?.item?.sproutCost && props.item.sproutCost > sprouts) {
+      return;
+    }
+
     if (props?.item?.sproutCost && props.item.sproutCost <= sprouts) {
       const newInventory = [...inventory];
       const itemIndex = newInventory.findIndex(
