@@ -1,5 +1,5 @@
 import { inventoryItemsAtom } from "@/atoms/bagAtoms";
-import { topStatusSproutsAtom } from "@/atoms/topStatusAtoms";
+import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import {
   DialogClose,
   DialogContent,
@@ -12,7 +12,7 @@ import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
 import { useAtom } from "jotai";
 import { Image, View } from "react-native";
-import { Easing, Notifier} from "react-native-notifier";
+import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 

@@ -1,7 +1,8 @@
 import { goalsListAtom } from "@/atoms/goalsAtoms";
+import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
 import { GoalCardData } from "@/data/dataInterfaces";
 import { GOAL_SPROUTS, MAX_GOALS } from "@/util/constants";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useState } from "react";
 import { View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
@@ -23,6 +24,7 @@ interface Props {
 export default function CreateGoalsModal(props: Props) {
   const [text, setText] = useState<string>("");
   const [goalList, setGoalList] = useAtom<GoalCardData[]>(goalsListAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
   function saveGoal() {
     const newGoal: GoalCardData = {
@@ -39,6 +41,7 @@ export default function CreateGoalsModal(props: Props) {
       showAnimationDuration: 800,
       showEasing: Easing.bounce,
     });
+    setMochitaSpeech("Wow, a new goal~💖 good luck, friend!");
   }
 
   return (

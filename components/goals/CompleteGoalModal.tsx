@@ -1,5 +1,5 @@
 import { goalsListAtom } from "@/atoms/goalsAtoms";
-import { topStatusSproutsAtom } from "@/atoms/topStatusAtoms";
+import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import { GoalCardData } from "@/data/dataInterfaces";
 import { GOAL_SPROUTS } from "@/util/constants";
 import { useAtom } from "jotai";

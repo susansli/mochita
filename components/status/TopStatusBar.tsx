@@ -1,11 +1,11 @@
-import { topStatusHappinessAtom, topStatusSproutsAtom } from "@/atoms/topStatusAtoms";
+import { topStatusHappinessAtom, topStatusSproutsAtom } from "@/atoms/homeAtoms";
+import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useAtomValue } from "jotai";
 import { View } from "react-native";
-import { topStatusBarData } from "@/data/data";
-import TopStatusBarItem from "./TopStatusBarItem";
 import uuid from 'react-native-uuid';
+import TopStatusBarItem from "./TopStatusBarItem";
 
 export default function TopStatusBar() {
 
