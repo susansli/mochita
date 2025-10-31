@@ -9,6 +9,7 @@ export const bottomNavData: BottomNavData[] = [
   {
     name: "book",
     label: "Journal",
+    link: "/pages/journal",
   },
   {
     name: "star",

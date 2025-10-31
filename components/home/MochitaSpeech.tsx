@@ -1,5 +1,5 @@
 import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 
@@ -9,7 +9,9 @@ export default function MochitaSpeech() {
     <>
       {mochitaSpeech.length ? (
         <Pressable
-          onTouchEnd={() => setMochitaSpeech("")}
+          onPress={() => setMochitaSpeech("")}
+          hitSlop={8}
+           style={{ elevation: 10 }}
           className="p-4 h-[7.5rem] w-[15rem] absolute bg-white mt-[23.5rem] ml-[5rem] items-center justify-center rounded-full"
         >
           <Text className="text-sm text-center">{mochitaSpeech}</Text>
