@@ -5,8 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
-import { JOURNAL_SPROUTS } from "@/util/constants";
-import { Calendar } from "lucide-react-native";
+import { Calendar, Feather } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -32,12 +31,17 @@ function JournalEntry() {
         </Button>
       </View>
       <Textarea
-        placeholder={`Write an entry per day for ${JOURNAL_SPROUTS} 🌱...`}
+        placeholder="Prompt idea: the first thing you noticed when you looked outside today?"
         style={{ backgroundColor: "white", borderColor: "transparent" }}
         className="mt-[1.5rem] rounded-3xl p-[1rem] h-[60vh]"
         value={text}
         onChangeText={setText}
       />
+
+      <Button className="bg-teal-600 flex-row items-center gap-2 px-3 py-2 mt-8">
+        <Feather size={18} color="#fff" strokeWidth={2} />
+        <Text className="text-white">Save Journal Entry</Text>
+      </Button>
     </View>
   );
 }

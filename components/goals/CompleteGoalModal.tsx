@@ -1,8 +1,8 @@
 import { goalsListAtom } from "@/atoms/goalsAtoms";
-import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
+import { mochitaSpeechAtom, topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import { GoalCardData } from "@/data/dataInterfaces";
 import { GOAL_SPROUTS } from "@/util/constants";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
@@ -22,6 +22,7 @@ interface Props {
 export default function CompleteGoalModal(props: Props) {
   const [goalList, setGoalList] = useAtom<GoalCardData[]>(goalsListAtom);
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
   function markGoalAsComplete() {
     const newGoals = [...goalList];
@@ -40,6 +41,8 @@ export default function CompleteGoalModal(props: Props) {
 
     setGoalList(newGoals);
     setSprouts(sprouts + GOAL_SPROUTS);
+    setMochitaSpeech("One down! Keep up the great work, nya~💖")
+    
   }
 
   return (
