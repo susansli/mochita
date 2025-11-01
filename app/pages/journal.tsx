@@ -9,6 +9,7 @@ import { Calendar, Pen } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
+import { useRouter } from "expo-router";
 
 function Journal() {
   const [startDate, setStartDate] = useState<string>(
@@ -18,6 +19,8 @@ function Journal() {
     new Date().toLocaleDateString()
   );
   const [open, setOpen] = useState<boolean>(false);
+
+  const router = useRouter();
 
   function renderDateTitle() {
     if (startDate !== endDate) {
@@ -56,6 +59,7 @@ function Journal() {
           variant="outline"
           className="border"
           style={{ borderColor: "#0d9488" }}
+          onTouchEnd={() => router.push("/pages/journal-entry")}
         >
           <Pen size={18} color="#0d9488" strokeWidth={2} />
           <Text className="text-teal-600">Create Entry</Text>
