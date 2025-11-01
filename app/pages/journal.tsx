@@ -1,21 +1,26 @@
+import FilterDatesModal from "@/components/journal/FilterDatesModal";
 import PageHeader from "@/components/nav/PageHeader";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
+import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
 import { Calendar, Pen } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-import Hr from "@/components/utility/Hr";
 
 function Journal() {
   const [startDate, setStartDate] = useState<string>(
     new Date().toLocaleDateString()
   );
-  const [endDate, setEndDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>(
+    new Date().toLocaleDateString()
+  );
+  const [open, setOpen] = useState<boolean>(false);
 
   function renderDateTitle() {
-    if (startDate.length && endDate.length) {
+    if (startDate !== endDate) {
       return `☀️ From ${startDate} to ${endDate}`;
     }
     return `☀️ ${startDate}`;
@@ -25,15 +30,27 @@ function Journal() {
     <View className="flex-1 bg-stone-200 p-5">
       <PageHeader title="Journal with Mochita" />
       <View className="flex-row mt-[2rem] items-center">
-        <Text className="font-medium text-xl">{renderDateTitle()}</Text>
+        <Text className="font-medium text-lg">{renderDateTitle()}</Text>
       </View>
       <Hr />
-      <View className="flex-row gap-2">
+      <View className="flex-row gap-2 mt-2">
         <Spacer />
-        <Button className="bg-teal-600 flex-row items-center gap-2 px-3 py-2">
-          <Calendar size={18} color="#fff" strokeWidth={2} />
-          <Text className="text-white">Filter Dates</Text>
-        </Button>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-teal-600 flex-row items-center gap-2 px-3 py-2">
+              <Calendar size={18} color="#fff" strokeWidth={2} />
+              <Text className="text-white">Filter Dates</Text>
+            </Button>
+          </DialogTrigger>
+          <FilterDatesModal
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={(date) => setStartDate(date)}
+            setEndDate={(date) => setEndDate(date)}
+            setClose={() => setOpen(false)}
+          />
+        </Dialog>
 
         <Button
           variant="outline"
@@ -43,6 +60,12 @@ function Journal() {
           <Pen size={18} color="#0d9488" strokeWidth={2} />
           <Text className="text-teal-600">Create Entry</Text>
         </Button>
+      </View>
+
+      <View className="mt-6">
+        <Text className="p-5 rounded-xl bg-stone-300 text-stone-500 text-center">
+          ✨ No entries... yet ✨
+        </Text>
       </View>
     </View>
   );
