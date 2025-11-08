@@ -31,3 +31,18 @@ export interface ItemCardData {
 export interface EquippedItems {
     [key: string] : ItemCardData;
 }
+
+export interface JournalTag {
+    label: string;
+    color: string;
+}
+
+export interface JournalEntryData {
+    date: string;
+    text: string;
+    tags?: JournalTag[];
+}
+
+export interface JournalEntries {
+    [key: string] : JournalEntryData; // key is numerical date, sorted in desc order
+}
