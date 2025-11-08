@@ -26,3 +26,7 @@ export function dateFromMMDDYYYY(s: string): Date {
   const [mm, dd, yyyy] = s.split("/").map(Number);
   return new Date(yyyy, mm - 1, dd); // months are 0-indexed
 }
+
+export function truncateText(text: string, length: number, ellipses?: boolean) {
+  return `${text.slice(0, length)}${(ellipses && text.length > length) ? "..." : ""}`;
+}

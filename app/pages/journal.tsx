@@ -1,15 +1,19 @@
+import { journalEntriesAtom } from "@/atoms/journalAtoms";
 import FilterDatesModal from "@/components/journal/FilterDatesModal";
+import JournalEntryCard from "@/components/journal/JournalEntryCard";
 import PageHeader from "@/components/nav/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
 import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
+import { JournalEntries } from "@/data/dataInterfaces";
+import { useRouter } from "expo-router";
+import { useAtomValue } from "jotai";
 import { Calendar, Pen } from "lucide-react-native";
 import { useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-import { useRouter } from "expo-router";
 
 function Journal() {
   const [startDate, setStartDate] = useState<string>(
@@ -20,6 +24,8 @@ function Journal() {
   );
   const [open, setOpen] = useState<boolean>(false);
 
+  const journalEntries = useAtomValue<JournalEntries>(journalEntriesAtom);
+
   const router = useRouter();
 
   function renderDateTitle() {
@@ -27,6 +33,21 @@ function Journal() {
       return `☀️ From ${startDate} to ${endDate}`;
     }
     return `☀️ ${startDate}`;
+  }
+
+  function renderJournalEntryCards() {
+    if (!Object.keys(journalEntries).length) {
+      return (
+        <View className="w-full">
+          <Text className="p-5 rounded-xl bg-stone-300 text-stone-500 text-center">
+            ✨ No entries... yet ✨
+          </Text>
+        </View>
+      );
+    }
+    return Object.keys(journalEntries).map((entry, i) => {
+      return <JournalEntryCard entry={journalEntries[entry]} key={i} />;
+    });
   }
 
   return (
@@ -66,11 +87,12 @@ function Journal() {
         </Button>
       </View>
 
-      <View className="mt-6">
-        <Text className="p-5 rounded-xl bg-stone-300 text-stone-500 text-center">
-          ✨ No entries... yet ✨
-        </Text>
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="mt-6"
+      >
+        {renderJournalEntryCards()}
+      </ScrollView>
     </View>
   );
 }

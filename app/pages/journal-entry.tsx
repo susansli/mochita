@@ -1,4 +1,7 @@
-import { journalEntriesAtom } from "@/atoms/journalAtoms";
+import {
+  activeJournalEntryAtom,
+  journalEntriesAtom,
+} from "@/atoms/journalAtoms";
 import PageHeader from "@/components/nav/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -15,17 +18,14 @@ import { useState } from "react";
 import { View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-interface Props {
-  entry?: JournalEntryData;
-}
-
-function JournalEntry(props: Props) {
+function JournalEntry() {
+  const [entry, setEntry] = useAtom<JournalEntryData | undefined>(
+    activeJournalEntryAtom
+  );
   const [date, setDate] = useState<string>(
-    props?.entry ? props.entry.date : new Date().toLocaleDateString()
+    entry ? entry.date : new Date().toLocaleDateString()
   );
-  const [text, setText] = useState<string>(
-    props?.entry ? props.entry.text : ""
-  );
+  const [text, setText] = useState<string>(entry ? entry.text : "");
   const [datePickerVisible, setDatePickerActive] = useState<boolean>(false);
   const [journalEntries, setJournalEntries] =
     useAtom<JournalEntries>(journalEntriesAtom);
@@ -37,11 +37,8 @@ function JournalEntry(props: Props) {
     const newJournalEntries = { ...journalEntries };
     const entryIndex = dateFromMMDDYYYY(date).getTime();
 
-    if (props?.entry && date !== props.entry.date) {
-      const oldEntryIndex = new Date(props.entry.date)
-        .getTime()
-        .toString();
-
+    if (entry && date !== entry.date) {
+      const oldEntryIndex = dateFromMMDDYYYY(entry.date).getTime().toString();
       delete newJournalEntries[oldEntryIndex];
     }
 
@@ -58,11 +55,12 @@ function JournalEntry(props: Props) {
     const sortedJournalEntries: JournalEntries = {};
 
     newDateKeys.forEach((key) => {
-      sortedJournalEntries[key] = {...newJournalEntries[key]};
+      sortedJournalEntries[key] = { ...newJournalEntries[key] };
     });
 
     setJournalEntries(sortedJournalEntries);
-    
+
+    setEntry(undefined);
     router.back();
   }
 
