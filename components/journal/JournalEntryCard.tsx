@@ -1,30 +1,22 @@
 import { activeJournalEntryAtom } from "@/atoms/journalAtoms";
 import { JournalEntryData } from "@/data/dataInterfaces";
 import { truncateText } from "@/util/helpers";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 import Spacer from "../utility/Spacer";
-import { useCallback } from "react";
 
 interface Props {
   entry: JournalEntryData;
 }
 
 export default function JournalEntryCard(props: Props) {
-  const setActiveJournalEntry = useSetAtom(activeJournalEntryAtom);
 
   const router = useRouter();
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        setActiveJournalEntry(undefined);
-      };
-    }, [setActiveJournalEntry])
-  );
+  const setActiveJournalEntry = useSetAtom(activeJournalEntryAtom);
 
   return (
     <Pressable

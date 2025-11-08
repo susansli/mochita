@@ -1,4 +1,7 @@
-import { journalEntriesAtom } from "@/atoms/journalAtoms";
+import {
+  activeJournalEntryAtom,
+  journalEntriesAtom,
+} from "@/atoms/journalAtoms";
 import FilterDatesModal from "@/components/journal/FilterDatesModal";
 import JournalEntryCard from "@/components/journal/JournalEntryCard";
 import PageHeader from "@/components/nav/PageHeader";
@@ -8,10 +11,10 @@ import { Text } from "@/components/ui/text";
 import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
 import { JournalEntries } from "@/data/dataInterfaces";
-import { useRouter } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Calendar, Pen } from "lucide-react-native";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 
@@ -26,7 +29,23 @@ function Journal() {
 
   const journalEntries = useAtomValue<JournalEntries>(journalEntriesAtom);
 
+  const setActiveJournalEntry = useSetAtom(activeJournalEntryAtom);
+
   const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setActiveJournalEntry(undefined);
+      };
+    }, [setActiveJournalEntry])
+  );
+
+  useEffect(() => {
+
+    // TODO after server implementation
+
+  }, [startDate, endDate]);
 
   function renderDateTitle() {
     if (startDate !== endDate) {
@@ -87,10 +106,7 @@ function Journal() {
         </Button>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        className="mt-6"
-      >
+      <ScrollView showsVerticalScrollIndicator={false} className="mt-6">
         {renderJournalEntryCards()}
       </ScrollView>
     </View>
