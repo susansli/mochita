@@ -2,9 +2,11 @@ import { ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
+import "react-native-gesture-handler"; // if you use RNGH (Reusables does)
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { NotifierWrapper } from "react-native-notifier";
+import "react-native-reanimated";
 import { NAV_THEME } from "../lib/theme";
-import 'react-native-gesture-handler'; // if you use RNGH (Reusables does)
-import 'react-native-reanimated';
 
 // Directive to make RNU doctor happy
 if (Platform.OS === "web") {
@@ -17,14 +19,23 @@ export default function RootLayout() {
   const colorScheme = "light";
 
   return (
-    <ThemeProvider value={NAV_THEME[colorScheme]}>
-      <Stack>
-        <Stack.Screen name="pages/index" options={{ headerShown: false }} />
-        <Stack.Screen name="pages/tutorial" options={{ headerShown: false }} />
-        <Stack.Screen name="pages/goals" options={{ headerShown: false }} />
-        <Stack.Screen name="pages/bag" options={{ headerShown: false }} />
-      </Stack>
-      <PortalHost />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider value={NAV_THEME[colorScheme]}>
+        <PortalHost />
+        <NotifierWrapper>
+          <Stack>
+            <Stack.Screen name="pages/index" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="pages/tutorial"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="pages/goals" options={{ headerShown: false }} />
+            <Stack.Screen name="pages/bag" options={{ headerShown: false }} />
+            <Stack.Screen name="pages/journal" options={{ headerShown: false }} />
+            <Stack.Screen name="pages/journal-entry" options={{ headerShown: false }} />
+          </Stack>
+        </NotifierWrapper>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }

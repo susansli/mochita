@@ -1,42 +1,52 @@
+import { goalsListAtom } from "@/atoms/goalsAtoms";
+import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
+import { GoalCardData } from "@/data/dataInterfaces";
+import { GOAL_SPROUTS, MAX_GOALS } from "@/util/constants";
+import { useAtom, useSetAtom } from "jotai";
+import { useState } from "react";
 import { View } from "react-native";
+import { Easing, Notifier } from "react-native-notifier";
+import { Button } from "../ui/button";
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "../ui/dialog";
-import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { goalsListAtom } from "@/atoms/goalsAtoms";
-import { GoalCardData } from "@/data/dataInterfaces";
 
 interface Props {
-    closeDialog: () => void;
+  setClose: () => void;
 }
 
 export default function CreateGoalsModal(props: Props) {
   const [text, setText] = useState<string>("");
   const [goalList, setGoalList] = useAtom<GoalCardData[]>(goalsListAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
   function saveGoal() {
     const newGoal: GoalCardData = {
-        index: goalList.length + 1,
-        goal: text,
-        isComplete: false
-    }
+      index: goalList.length + 1,
+      goal: text,
+      isComplete: false,
+    };
     setGoalList([...goalList, newGoal]);
     setText("");
-    props.closeDialog();
+    props.setClose();
+    Notifier.showNotification({
+      title: `New goal added!`,
+      description: `Complete this goal today to earn ${GOAL_SPROUTS} 🌱!`,
+      showAnimationDuration: 800,
+      showEasing: Easing.bounce,
+    });
+    setMochitaSpeech("Wow, a new goal~💖 good luck, friend!");
   }
 
   return (
     <DialogContent className="sm:max-w-[425px]">
-      <DialogHeader>
+      <DialogHeader >
         <DialogTitle>Create A New Goal!</DialogTitle>
         <DialogDescription>
           You can make and set 5 goals a day. Completion of each goal will earn
@@ -52,13 +62,14 @@ export default function CreateGoalsModal(props: Props) {
         />
       </View>
       <DialogFooter>
-        <DialogClose asChild>
-          <Button variant="outline">
-            <Text>Cancel</Text>
-          </Button>
-        </DialogClose>
-        <Button onTouchEnd={saveGoal}>
-          <Text>Save changes</Text>
+        <Button variant="outline" onTouchEnd={props.setClose}>
+          <Text>Cancel</Text>
+        </Button>
+        <Button
+          disabled={goalList.length === MAX_GOALS || !text.length}
+          onTouchEnd={saveGoal}
+        >
+          <Text>{`${goalList.length === MAX_GOALS ? "Max Goals Reached" : "Save Goal"}`}</Text>
         </Button>
       </DialogFooter>
     </DialogContent>
