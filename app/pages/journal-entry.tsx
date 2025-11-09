@@ -1,3 +1,4 @@
+import { mochitaSpeechAtom, topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import {
   activeJournalEntryAtom,
   journalEntriesAtom,
@@ -10,18 +11,23 @@ import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
 import { JournalEntries, JournalEntryData } from "@/data/dataInterfaces";
+import { JOURNAL_SPROUTS } from "@/util/constants";
 import { dateFromMMDDYYYY, sortNumericStringsDescStable } from "@/util/helpers";
 import { useRouter } from "expo-router";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Calendar, Feather } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Easing, Notifier } from "react-native-notifier";
 
 function JournalEntry() {
   const [entry, setEntry] = useAtom<JournalEntryData | undefined>(
     activeJournalEntryAtom
   );
+  const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
+
   const [date, setDate] = useState<string>(
     entry ? entry.date : new Date().toLocaleDateString()
   );
@@ -37,9 +43,30 @@ function JournalEntry() {
     const newJournalEntries = { ...journalEntries };
     const entryIndex = dateFromMMDDYYYY(date).getTime();
 
+    console.log(entry);
+
     if (entry && date !== entry.date) {
+      // issue with overwriting prev entry, need to change indexing structure
       const oldEntryIndex = dateFromMMDDYYYY(entry.date).getTime().toString();
       delete newJournalEntries[oldEntryIndex];
+      setMochitaSpeech("Love it when you journal, even if it's on a different day!");
+
+    } else {
+  
+      if (!(entryIndex in newJournalEntries)) {
+        // new entry so add sprouts
+        setSprouts(sprouts + JOURNAL_SPROUTS);
+        Notifier.showNotification({
+          title: `Daily Journaling Complete!`,
+          description: `You've earned ${JOURNAL_SPROUTS} 🌱 - Mochita is proud of you!`,
+          showAnimationDuration: 800,
+          showEasing: Easing.bounce,
+        });
+        setMochitaSpeech("Ooo, thanks for sharing that with me! 💖");
+
+      } else {
+        setMochitaSpeech("You had more thoughts to add, huh?");
+      }
     }
 
     newJournalEntries[entryIndex] = {

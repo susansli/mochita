@@ -35,9 +35,7 @@ function Journal() {
 
   useFocusEffect(
     useCallback(() => {
-      return () => {
-        setActiveJournalEntry(undefined);
-      };
+       setActiveJournalEntry(undefined);
     }, [setActiveJournalEntry])
   );
 

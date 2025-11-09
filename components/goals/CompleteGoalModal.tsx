@@ -41,7 +41,7 @@ export default function CompleteGoalModal(props: Props) {
 
     setGoalList(newGoals);
     setSprouts(sprouts + GOAL_SPROUTS);
-    setMochitaSpeech("One down! Keep up the great work, nya~💖")
+    setMochitaSpeech("One down! Keep up the great work, nya~💖");
     
   }
 
