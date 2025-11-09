@@ -14,3 +14,19 @@ export function returnItemType(itemType: ItemType): string {
         return "Treat";
     }
   }
+
+export function sortNumericStringsDescStable(values: string[]): string[] {
+  return values
+    .map((s, i) => ({ s, n: Number(s.trim()), i }))
+    .sort((A, B) => (B.n - A.n) || (A.i - B.i)) // tie-break by original index
+    .map(({ s }) => s);
+}
+
+export function dateFromMMDDYYYY(s: string): Date {
+  const [mm, dd, yyyy] = s.split("/").map(Number);
+  return new Date(yyyy, mm - 1, dd); // months are 0-indexed
+}
+
+export function truncateText(text: string, length: number, ellipses?: boolean) {
+  return `${text.slice(0, length)}${(ellipses && text.length > length) ? "..." : ""}`;
+}

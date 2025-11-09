@@ -46,11 +46,13 @@ export default function InventoryItemModal(props: Props) {
   }
 
   function useInventoryItem() {
+    if (isButtonDisabled()) {
+      return;
+    }
 
     let newInventory = [...inventory];
 
     if (props.item.type === ItemType.TREAT) {
-
       props.item?.happiness && setHappiness(happiness + props.item.happiness);
 
       props.setClose();
@@ -61,9 +63,7 @@ export default function InventoryItemModal(props: Props) {
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
       });
-
     } else {
-
       const newEquippedItems = { ...equippedItems };
 
       newEquippedItems[props.item.type] = props.item;
@@ -114,7 +114,11 @@ export default function InventoryItemModal(props: Props) {
           />
         </View>
         <Text className="font-semibold">{`🎒 Qty: ${props.item.qty}`}</Text>
-        <Text>{isButtonDisabled() ? "You need to free this slot before you can equip another item." : `Would you like to ${props.item.happiness ? "use" : "equip"} this item?`}</Text>
+        <Text>
+          {isButtonDisabled()
+            ? "You need to free this slot before you can equip another item."
+            : `Would you like to ${props.item.happiness ? "use" : "equip"} this item?`}
+        </Text>
       </View>
       <DialogFooter>
         <DialogClose asChild>
@@ -123,7 +127,11 @@ export default function InventoryItemModal(props: Props) {
           </Button>
         </DialogClose>
         <Button disabled={isButtonDisabled()} onTouchEnd={useInventoryItem}>
-          <Text>{isButtonDisabled() ? `${returnItemType(props.item.type)} Already Equipped!` : `${props.item.happiness ? "Use" : "Equip"} ${props.item.name}`}</Text>
+          <Text>
+            {isButtonDisabled()
+              ? `${returnItemType(props.item.type)} Already Equipped!`
+              : `${props.item.happiness ? "Use" : "Equip"} ${props.item.name}`}
+          </Text>
         </Button>
       </DialogFooter>
     </DialogContent>
