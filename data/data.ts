@@ -2,6 +2,7 @@ import { ItemType } from "@/util/enums";
 import {
   BottomNavData,
   ItemCardData,
+  TagData,
   TopStatusBarData,
 } from "./dataInterfaces";
 
@@ -80,13 +81,21 @@ export const storeItemsList: ItemCardData[] = [
     type: ItemType.TREAT,
     sproutCost: 2,
     name: "Taiyaki",
-    happiness: 1
+    happiness: 1,
   },
   {
     imgUrl: "https://i.imgur.com/fPq9ZjK.png",
     type: ItemType.TREAT,
     sproutCost: 2,
     name: "Nigiri Toy",
-    happiness: 1
-  }
+    happiness: 1,
+  },
+];
+
+export const tagData: TagData[] = [
+  { label: "Personal", value: "0", color: "#f97316" }, // orange-500
+  { label: "Motivation", value: "1", color: "#22c55e" }, // green-500
+  { label: "Goals", value: "2", color: "#6366f1" }, // indigo-500
+  { label: "Reflection", value: "3", color: "#3b82f6" }, // blue-500
+  { label: "Wins", value: "4", color: "#ec4899" }, // pink-500
 ];

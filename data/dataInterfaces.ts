@@ -46,3 +46,9 @@ export interface JournalEntryData {
 export interface JournalEntries {
     [key: string] : JournalEntryData; // key is numerical date, sorted in desc order
 }
+
+export interface TagData {
+    label: string;
+    value: string;
+    color: string;
+}
