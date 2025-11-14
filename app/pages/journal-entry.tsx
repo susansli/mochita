@@ -73,9 +73,16 @@ function JournalEntry() {
   );
   const [text, setText] = useState<string>(entry ? entry.text : "");
   const [datePickerVisible, setDatePickerActive] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(getSelectedEntries());
 
   const router = useRouter();
+
+  function getSelectedEntries() {
+    if (entry && entry?.tags) {
+      return entry.tags.map((tag) => tag.value);
+    }
+    return [];
+  }
 
   function saveJournalEntry() {
     // with an actual server & paginated APIs this would be less unwieldy
@@ -105,9 +112,19 @@ function JournalEntry() {
       }
     }
 
+    const entryTags: TagData[] = [];
+
+    selected.forEach((value) => {
+      const journalTag = tagData[Number(value)];
+      if (journalTag) {
+        entryTags.push(journalTag);
+      }
+    });
+
     newJournalEntries[entryIndex] = {
       date: date,
       text: text,
+      tags: entryTags,
     };
 
     // "sort" by creating new object, will handle through direct API call to refresh atom later

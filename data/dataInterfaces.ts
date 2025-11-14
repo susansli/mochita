@@ -32,15 +32,10 @@ export interface EquippedItems {
     [key: string] : ItemCardData;
 }
 
-export interface JournalTag {
-    label: string;
-    color: string;
-}
-
 export interface JournalEntryData {
     date: string;
     text: string;
-    tags?: JournalTag[];
+    tags?: TagData[];
 }
 
 export interface JournalEntries {
