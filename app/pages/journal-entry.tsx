@@ -10,16 +10,54 @@ import { Textarea } from "@/components/ui/textarea";
 import Hr from "@/components/utility/Hr";
 import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
-import { JournalEntries, JournalEntryData } from "@/data/dataInterfaces";
+import { tagData } from "@/data/data";
+import {
+  JournalEntries,
+  JournalEntryData,
+  TagData,
+} from "@/data/dataInterfaces";
 import { JOURNAL_SPROUTS } from "@/util/constants";
 import { dateFromMMDDYYYY, sortNumericStringsDescStable } from "@/util/helpers";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useRouter } from "expo-router";
 import { useAtom, useSetAtom } from "jotai";
 import { Calendar, Feather } from "lucide-react-native";
 import { useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { MultiSelect } from "react-native-element-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Easing, Notifier } from "react-native-notifier";
+
+const styles = StyleSheet.create({
+  container: { padding: 16 },
+  dropdown: {
+    height: 50,
+    backgroundColor: "transparent",
+    borderBottomColor: "black",
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    color: "black",
+  },
+});
 
 function JournalEntry() {
   const [entry, setEntry] = useAtom<JournalEntryData | undefined>(
@@ -27,32 +65,38 @@ function JournalEntry() {
   );
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
   const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
+  const [journalEntries, setJournalEntries] =
+    useAtom<JournalEntries>(journalEntriesAtom);
 
   const [date, setDate] = useState<string>(
     entry ? entry.date : new Date().toLocaleDateString()
   );
   const [text, setText] = useState<string>(entry ? entry.text : "");
   const [datePickerVisible, setDatePickerActive] = useState<boolean>(false);
-  const [journalEntries, setJournalEntries] =
-    useAtom<JournalEntries>(journalEntriesAtom);
+  const [selected, setSelected] = useState<string[]>(getSelectedEntries());
 
   const router = useRouter();
+
+  function getSelectedEntries() {
+    if (entry && entry?.tags) {
+      return entry.tags.map((tag) => tag.value);
+    }
+    return [];
+  }
 
   function saveJournalEntry() {
     // with an actual server & paginated APIs this would be less unwieldy
     const newJournalEntries = { ...journalEntries };
     const entryIndex = dateFromMMDDYYYY(date).getTime();
 
-    console.log(entry);
-
     if (entry && date !== entry.date) {
       // issue with overwriting prev entry, need to change indexing structure
       const oldEntryIndex = dateFromMMDDYYYY(entry.date).getTime().toString();
       delete newJournalEntries[oldEntryIndex];
-      setMochitaSpeech("Love it when you journal, even if it's on a different day!");
-
+      setMochitaSpeech(
+        "Love it when you journal, even if it's on a different day!"
+      );
     } else {
-  
       if (!(entryIndex in newJournalEntries)) {
         // new entry so add sprouts
         setSprouts(sprouts + JOURNAL_SPROUTS);
@@ -63,15 +107,24 @@ function JournalEntry() {
           showEasing: Easing.bounce,
         });
         setMochitaSpeech("Ooo, thanks for sharing that with me! 💖");
-
       } else {
         setMochitaSpeech("You had more thoughts to add, huh?");
       }
     }
 
+    const entryTags: TagData[] = [];
+
+    selected.forEach((value) => {
+      const journalTag = tagData[Number(value)];
+      if (journalTag) {
+        entryTags.push(journalTag);
+      }
+    });
+
     newJournalEntries[entryIndex] = {
       date: date,
       text: text,
+      tags: entryTags,
     };
 
     // "sort" by creating new object, will handle through direct API call to refresh atom later
@@ -89,6 +142,21 @@ function JournalEntry() {
 
     setEntry(undefined);
     router.back();
+  }
+
+  function renderTagItem(item: TagData) {
+    return (
+      <View className="flex-row p-[1rem]">
+        <Text className="font-semibold">{item.label}</Text>
+        <Spacer />
+        <AntDesign
+          style={styles.icon}
+          name="check-circle"
+          color={item.color}
+          size={20}
+        />
+      </View>
+    );
   }
 
   return (
@@ -121,10 +189,53 @@ function JournalEntry() {
             <Text className="text-white">Edit Date</Text>
           </Button>
         </View>
+
+        <View className="mt-[1rem] p-[1rem] bg-white rounded-3xl">
+          <MultiSelect
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            search
+            data={tagData}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Tags"
+            searchPlaceholder="Search..."
+            value={selected}
+            onChange={(item) => {
+              setSelected(item);
+            }}
+            renderLeftIcon={() => (
+              <AntDesign
+                style={styles.icon}
+                color="teal"
+                name="tags"
+                size={20}
+              />
+            )}
+            renderItem={renderTagItem}
+            renderSelectedItem={(item, unSelect) => {
+              return (
+                <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                  <View className="flex-row gap-[0.5rem] p-[0.5rem] items-center rounded-full bg-gray-100 mt-[0.5rem] mr-[0.5rem]">
+                    <View
+                      className={`p-[0.5rem] rounded-full`}
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <Text>{item.label}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+
         <Textarea
           placeholder="Prompt idea: the first thing you noticed when you looked outside today?"
           style={{ backgroundColor: "white", borderColor: "transparent" }}
-          className="mt-[1.5rem] rounded-3xl p-[1rem] h-[60vh]"
+          className="mt-[1rem] rounded-3xl p-[1rem] h-[45vh]"
           value={text}
           onChangeText={setText}
         />
