@@ -1,9 +1,11 @@
 import { inventoryItemsAtom } from "@/atoms/bagAtoms";
+import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import BagContents from "@/components/bag/BagContents";
 import ItemCard from "@/components/bag/ItemCard";
 import PageHeader from "@/components/nav/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
+import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
 import { storeItemsList } from "@/data/data";
 import { ItemCardData } from "@/data/dataInterfaces";
@@ -18,6 +20,7 @@ function Bag() {
   }
 
   const inventory = useAtomValue<ItemCardData[]>(inventoryItemsAtom);
+  const sprouts = useAtomValue(topStatusSproutsAtom);
   const [active, setActive] = useState<ActiveBagPage>(ActiveBagPage.STORE);
 
   function renderItemCards() {
@@ -42,9 +45,13 @@ function Bag() {
 
       <BagContents />
 
-      <View className="flex-row my-5 gap-3">
+      <View className="flex-row my-5 gap-2">
+        <View className="w-[30%] bg-white p-[0.25rem] rounded-3xl gap-3 items-center justify-center">
+          <Text>{`${sprouts} 🌱`}</Text>
+        </View>
+        <Spacer />
         <Button
-          className={`w-[48%] ${active === ActiveBagPage.STORE ? "bg-teal-700" : "bg-stone-300"}`}
+          className={`w-[25%] ${active === ActiveBagPage.STORE ? "bg-teal-700" : "bg-stone-300"}`}
           onTouchEnd={() => setActive(ActiveBagPage.STORE)}
         >
           <Text
@@ -54,13 +61,13 @@ function Bag() {
           </Text>
         </Button>
         <Button
-          className={`w-[48%] ${active === ActiveBagPage.INVENTORY ? "bg-teal-700" : "bg-stone-300"}`}
+          className={`w-[25%] ${active === ActiveBagPage.INVENTORY ? "bg-teal-700" : "bg-stone-300"}`}
           onTouchEnd={() => setActive(ActiveBagPage.INVENTORY)}
         >
           <Text
              className={`text-center ${active === ActiveBagPage.INVENTORY ? "text-white" : "text-gray-400"}`}
           >
-            Inventory
+            Bag
           </Text>
         </Button>
       </View>
