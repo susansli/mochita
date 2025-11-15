@@ -1,5 +1,5 @@
-import { equippedItemsAtom, inventoryItemsAtom } from "@/atoms/bagAtoms";
-import { topStatusHappinessAtom } from "@/atoms/homeAtoms";
+import { equippedItemsAtom, inventoryItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
+import { mochitaSpeechAtom, topStatusHappinessAtom } from "@/atoms/homeAtoms";
 import {
   DialogClose,
   DialogContent,
@@ -11,7 +11,7 @@ import {
 import { EquippedItems, ItemCardData } from "@/data/dataInterfaces";
 import { ItemType } from "@/util/enums";
 import { returnItemType } from "@/util/helpers";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
@@ -27,6 +27,9 @@ export default function InventoryItemModal(props: Props) {
   const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
+  const setMaxHappinessNotif = useSetAtom(isMaxHappinessNotifAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
+  
 
   function renderItemDescription() {
     if (props.item.type === ItemType.TREAT) {

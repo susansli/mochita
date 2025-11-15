@@ -3,29 +3,39 @@ import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
 import MochitaSpeech from "@/components/home/MochitaSpeech";
 import TopStatusBar from "@/components/status/TopStatusBar";
 import { useFocusEffect } from "expo-router";
-import { useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
 import { Image, ImageBackground, StyleSheet, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import { SPEECH_TIME } from "@/util/constants";
+import { equippedItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
   const setIsNavbarCollapsed = useSetAtom(isNavbarCollapsedAtom);
-  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
-
+  const [mochitaSpeech, setMochitaSpeech] = useAtom(mochitaSpeechAtom);
+  const [isMaxHappinessNotif, setIsMaxHappinessMotif] = useAtom(isMaxHappinessNotifAtom);
+  const equippedItems = useAtomValue(equippedItemsAtom);
 
   const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
+      if (isMaxHappinessNotif) {
+        if (Object.keys(equippedItems).length === 4) {
+          setMochitaSpeech("Nya~ all ready to go traveling!");
+        } else {
+          setMochitaSpeech("I feel ready to travel, but I still need gear!");
+        }
+        setIsMaxHappinessMotif(false);
+      }
       setTimeout(() => setMochitaSpeech(''), SPEECH_TIME);
       setIsNavbarHidden(false);
       return () => {
         setIsNavbarHidden(true);
         setIsNavbarCollapsed(true);
       };
-    }, [setIsNavbarHidden, setIsNavbarCollapsed, setMochitaSpeech])
+    }, [setIsNavbarHidden, setIsNavbarCollapsed, setMochitaSpeech, mochitaSpeech, isMaxHappinessNotif, setIsMaxHappinessMotif])
   );
 
   return (
