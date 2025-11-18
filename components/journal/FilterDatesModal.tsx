@@ -96,7 +96,7 @@ export default function FilterDatesModal(props: Props) {
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" onTouchEnd={props.setClose}>
-              <Text>Cancel</Text>
+              <Text>Cancel/</Text>
             </Button>
           </DialogClose>
           <Button onTouchEnd={handleSave}>
