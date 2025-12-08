@@ -16,8 +16,7 @@ function Tutorial() {
   const [mochitaSpeech, setMochitaSpeech] = useAtom(mochitaSpeechAtom);
   const [isMaxHappinessNotif, setIsMaxHappinessMotif] = useAtom(isMaxHappinessNotifAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
-  const [happiness, setHappiness] = useAtom(topStatusHappinessAtom);
-
+  
   const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
