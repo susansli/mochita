@@ -3,12 +3,17 @@ import {
     topStatusHappinessAtom,
     topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
+import {
+    Dialog,
+    DialogTrigger
+} from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useFocusEffect } from "expo-router";
 import { useAtomValue } from "jotai";
 import { MapPin } from "lucide-react-native";
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
     Easing,
@@ -19,6 +24,7 @@ import Animated, {
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import Spacer from "../utility/Spacer";
+import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
 
 export default function TopStatusBar() {
@@ -26,18 +32,22 @@ export default function TopStatusBar() {
   const currentSprouts = useAtomValue(topStatusSproutsAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
 
+  const [isBeginTravelModalOpen, setIsBeginTravelModalOpen] = useState<boolean>(false);
+
   const scale = useSharedValue<number>(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
-  useEffect(() => {
-    scale.value = withRepeat(
-      withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
-  }, [scale]);
+  useFocusEffect(
+    useCallback(() => {
+      scale.value = withRepeat(
+        withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+        -1,
+        true
+      );
+    }, [scale])
+  );
 
   function renderHappinessHearts() {
     const greyedOut: number = MAX_HAPPINESS - currentHappiness;
@@ -67,14 +77,19 @@ export default function TopStatusBar() {
         <Spacer />
         {Object.keys(equippedItems).length === 4 &&
           currentHappiness === MAX_HAPPINESS && (
-            <Pressable>
-                <Animated.View
-                className="bg-teal-400 p-[0.3rem] rounded-full"
-                style={animatedStyle}
-                >
-                <MapPin size={18} color="white" strokeWidth={2} />
-                </Animated.View>
-            </Pressable>
+            <Dialog open={isBeginTravelModalOpen}  onOpenChange={setIsBeginTravelModalOpen}>
+              <DialogTrigger asChild>
+                <Pressable>
+                  <Animated.View
+                    className="bg-teal-400 p-[0.3rem] rounded-full"
+                    style={animatedStyle}
+                  >
+                    <MapPin size={18} color="white" strokeWidth={2} />
+                  </Animated.View>
+                </Pressable>
+              </DialogTrigger>
+              <StartTravelModal setClose={() => setIsBeginTravelModalOpen(false)} />
+            </Dialog>
           )}
       </View>
     </View>
