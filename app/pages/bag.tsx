@@ -57,7 +57,11 @@ function Bag() {
   return (
     <>
       <Dialog open={isTravelNotif} onOpenChange={setIsTravelNotif}>
-        <TravelNotifModal setClose={() => {setIsTravelNotif(false)}} />
+        <TravelNotifModal
+          setClose={() => {
+            setIsTravelNotif(false);
+          }}
+        />
       </Dialog>
       <View className="flex-1 bg-stone-200 p-5">
         <PageHeader title="Pack Mochita's Bag" />
