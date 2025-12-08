@@ -1,10 +1,10 @@
 import {
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { View } from "react-native";
@@ -96,7 +96,7 @@ export default function FilterDatesModal(props: Props) {
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" onTouchEnd={props.setClose}>
-              <Text>Cancel/</Text>
+              <Text>Cancel</Text>
             </Button>
           </DialogClose>
           <Button onTouchEnd={handleSave}>

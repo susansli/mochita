@@ -1,14 +1,14 @@
-import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
+import { equippedItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
+import { mochitaSpeechAtom, topStatusHappinessAtom } from "@/atoms/homeAtoms";
 import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
 import MochitaSpeech from "@/components/home/MochitaSpeech";
 import TopStatusBar from "@/components/status/TopStatusBar";
+import { SPEECH_TIME } from "@/util/constants";
 import { useFocusEffect } from "expo-router";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
 import { Image, ImageBackground, StyleSheet, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
-import { SPEECH_TIME } from "@/util/constants";
-import { equippedItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
 
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
@@ -16,6 +16,7 @@ function Tutorial() {
   const [mochitaSpeech, setMochitaSpeech] = useAtom(mochitaSpeechAtom);
   const [isMaxHappinessNotif, setIsMaxHappinessMotif] = useAtom(isMaxHappinessNotifAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
+  const [happiness, setHappiness] = useAtom(topStatusHappinessAtom);
 
   const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
