@@ -90,7 +90,7 @@ export default function TopStatusBar() {
               </Pressable>
             </DialogTrigger>
             {isTraveling ? (
-              <TravelUpdatesModal setClose={() => setIsOpen(false)} />
+              <TravelUpdatesModal />
             ) : (
               <StartTravelModal setClose={() => setIsOpen(false)} />
             )}

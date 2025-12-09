@@ -1,15 +1,20 @@
 import { Image, View } from "react-native";
 import { Button } from "../ui/button";
-import { DialogClose, DialogContent, DialogFooter } from "../ui/dialog";
+import {
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { Text } from "../ui/text";
 
-interface Props {
-  setClose: () => void;
-}
-
-export default function TravelUpdatesModal(props: Props) {
+export default function TravelUpdatesModal() {
   return (
     <DialogContent className="sm">
+      <DialogHeader>
+        <DialogTitle>Travel Notes: #01</DialogTitle>
+      </DialogHeader>
       <View className="grid gap-4 mt-[1rem]">
         <View className="items-center">
           <Image
