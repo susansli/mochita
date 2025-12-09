@@ -1,6 +1,6 @@
 import { equippedItemsAtom } from "@/atoms/bagAtoms";
 import { topStatusHappinessAtom } from "@/atoms/homeAtoms";
-import { isTravelingAtom } from "@/atoms/travelAtoms";
+import { isMailAvailableAtom, isTravelingAtom } from "@/atoms/travelAtoms";
 import { useAtom, useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
@@ -16,6 +16,7 @@ export default function StartTravelModal(props: Props) {
   const [equippedItems, setEquippedItems] = useAtom(equippedItemsAtom);
   const setIsTraveling = useSetAtom(isTravelingAtom);
   const setHappiness = useSetAtom(topStatusHappinessAtom);
+  const setIsMailAvailable = useSetAtom(isMailAvailableAtom); // placeholder
 
   function renderItemDescriptions() {
     return Object.keys(equippedItems).map((key, i) => {
@@ -31,6 +32,8 @@ export default function StartTravelModal(props: Props) {
     setIsTraveling(true);
     setEquippedItems({});
     setHappiness(0);
+    setIsMailAvailable(true);
+
     props.setClose();
     Notifier.showNotification({
       title: `Mochita has left on a trip!`,

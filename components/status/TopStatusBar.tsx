@@ -3,14 +3,14 @@ import {
   topStatusHappinessAtom,
   topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
-import { isTravelingAtom } from "@/atoms/travelAtoms";
+import { isMailAvailableAtom, isTravelingAtom } from "@/atoms/travelAtoms";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFocusEffect } from "expo-router";
-import { useAtomValue } from "jotai";
-import { MapPin } from "lucide-react-native";
+import { useAtom, useAtomValue } from "jotai";
+import { Mail, MapPin } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -25,14 +25,17 @@ import Spacer from "../utility/Spacer";
 import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
 import TravelUpdatesModal from "./TravelUpdatesModal";
+import TravelPostcardModal from "./TravelPostcardModal";
 
 export default function TopStatusBar() {
   const currentHappiness = useAtomValue(topStatusHappinessAtom);
   const currentSprouts = useAtomValue(topStatusSproutsAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
   const isTraveling = useAtomValue(isTravelingAtom);
+  const [isMailAvailable, setIsMailAvailable] = useAtom(isMailAvailableAtom);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
+  const [isMailOpen, setIsMailOpen] = useState<boolean>(false);
 
   const scale = useSharedValue<number>(1);
   const animatedStyle = useAnimatedStyle(() => ({
@@ -75,27 +78,45 @@ export default function TopStatusBar() {
       <View className="flex-row gap-1 align-center">
         {renderHappinessHearts()}
         <Spacer />
-        {((Object.keys(equippedItems).length === 4 &&
-          currentHappiness === MAX_HAPPINESS) ||
-          isTraveling) && (
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Pressable>
-                <Animated.View
-                  className="bg-teal-400 p-[0.3rem] rounded-full"
-                  style={animatedStyle}
-                >
-                  <MapPin size={18} color="white" strokeWidth={2} />
-                </Animated.View>
-              </Pressable>
-            </DialogTrigger>
-            {isTraveling ? (
-              <TravelUpdatesModal />
-            ) : (
-              <StartTravelModal setClose={() => setIsOpen(false)} />
-            )}
-          </Dialog>
-        )}
+        <View className="flex-row gap-[0.75rem]">
+
+          {isMailAvailable && (
+            <Dialog open={isMailOpen} onOpenChange={setIsMailOpen}>
+              <DialogTrigger asChild>
+                <Pressable>
+                  <Animated.View
+                    className="bg-teal-400 p-[0.3rem] rounded-full"
+                    style={animatedStyle}
+                  >
+                    <Mail size={18} color="white" strokeWidth={2} />
+                  </Animated.View>
+                </Pressable>
+              </DialogTrigger>
+              <TravelPostcardModal />
+            </Dialog>
+          )}
+          {((Object.keys(equippedItems).length === 4 &&
+            currentHappiness === MAX_HAPPINESS) ||
+            isTraveling) && (
+            <Dialog open={isTravelOpen} onOpenChange={setIsTravelOpen}>
+              <DialogTrigger asChild>
+                <Pressable>
+                  <Animated.View
+                    className="bg-teal-400 p-[0.3rem] rounded-full"
+                    style={animatedStyle}
+                  >
+                    <MapPin size={18} color="white" strokeWidth={2} />
+                  </Animated.View>
+                </Pressable>
+              </DialogTrigger>
+              {isTraveling ? (
+                <TravelUpdatesModal />
+              ) : (
+                <StartTravelModal setClose={() => setIsTravelOpen(false)} />
+              )}
+            </Dialog>
+          )}
+        </View>
       </View>
     </View>
   );
