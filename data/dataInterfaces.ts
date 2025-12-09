@@ -26,23 +26,25 @@ export interface ItemCardData {
     sproutCost?: number;
     qty?: number;
     happiness?: number;
+    effects: string[];
 }
 
 export interface EquippedItems {
     [key: string] : ItemCardData;
 }
 
-export interface JournalTag {
-    label: string;
-    color: string;
-}
-
 export interface JournalEntryData {
     date: string;
     text: string;
-    tags?: JournalTag[];
+    tags?: TagData[];
 }
 
 export interface JournalEntries {
     [key: string] : JournalEntryData; // key is numerical date, sorted in desc order
+}
+
+export interface TagData {
+    label: string;
+    value: string;
+    color: string;
 }

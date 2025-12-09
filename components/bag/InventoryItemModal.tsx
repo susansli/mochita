@@ -1,5 +1,5 @@
-import { equippedItemsAtom, inventoryItemsAtom } from "@/atoms/bagAtoms";
-import { topStatusHappinessAtom } from "@/atoms/homeAtoms";
+import { equippedItemsAtom, inventoryItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
+import { mochitaSpeechAtom, topStatusHappinessAtom } from "@/atoms/homeAtoms";
 import {
   DialogClose,
   DialogContent,
@@ -9,9 +9,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { EquippedItems, ItemCardData } from "@/data/dataInterfaces";
+import { MAX_HAPPINESS } from "@/util/constants";
 import { ItemType } from "@/util/enums";
 import { returnItemType } from "@/util/helpers";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
@@ -27,6 +28,8 @@ export default function InventoryItemModal(props: Props) {
   const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
+  const setMaxHappinessNotif = useSetAtom(isMaxHappinessNotifAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
   function renderItemDescription() {
     if (props.item.type === ItemType.TREAT) {
@@ -53,7 +56,15 @@ export default function InventoryItemModal(props: Props) {
     let newInventory = [...inventory];
 
     if (props.item.type === ItemType.TREAT) {
-      props.item?.happiness && setHappiness(happiness + props.item.happiness);
+      if (props.item?.happiness) {
+        const newHappiness = happiness + props.item.happiness;
+        setHappiness(newHappiness);
+        if (newHappiness === MAX_HAPPINESS) {
+          setMaxHappinessNotif(true);
+        } else {
+          setMochitaSpeech("Thanks for the treat! I loved it!");
+        }
+      }
 
       props.setClose();
 
@@ -63,6 +74,8 @@ export default function InventoryItemModal(props: Props) {
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
       });
+
+
     } else {
       const newEquippedItems = { ...equippedItems };
 

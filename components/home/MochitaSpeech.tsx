@@ -1,13 +1,15 @@
 import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
-import { useAtom } from "jotai";
+import { isTravelingAtom } from "@/atoms/travelAtoms";
+import { useAtom, useAtomValue } from "jotai";
 import { Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 
 export default function MochitaSpeech() {
   const [mochitaSpeech, setMochitaSpeech] = useAtom<string>(mochitaSpeechAtom);
+  const isTraveling = useAtomValue(isTravelingAtom);
   return (
     <>
-      {mochitaSpeech.length ? (
+      {(mochitaSpeech.length && !isTraveling) ? (
         <Pressable
           onPress={() => setMochitaSpeech("")}
           hitSlop={8}

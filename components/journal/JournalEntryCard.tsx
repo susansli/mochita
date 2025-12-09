@@ -13,10 +13,23 @@ interface Props {
 }
 
 export default function JournalEntryCard(props: Props) {
-
   const router = useRouter();
 
   const setActiveJournalEntry = useSetAtom(activeJournalEntryAtom);
+
+  function renderTagCircles() {
+    if (props.entry?.tags) {
+      return props.entry.tags.map((tag, i) => {
+        return (
+          <View
+            key={i}
+            className={`p-[0.5rem] rounded-full`}
+            style={{ backgroundColor: tag.color }}
+          />
+        );
+      });
+    }
+  }
 
   return (
     <Pressable
@@ -38,6 +51,17 @@ export default function JournalEntryCard(props: Props) {
           {truncateText(props.entry.text, 105, true)}
         </Text>
       </View>
+
+      <>
+        {props.entry?.tags && props.entry.tags.length && (
+          <View className="flex-row">
+            <Spacer />
+            <View className="flex-row p-[0.5rem] rounded-3xl bg-white mt-[1rem] gap-[0.5rem]">
+              {renderTagCircles()}
+            </View>
+          </View>
+        )}
+      </>
     </Pressable>
   );
 }
