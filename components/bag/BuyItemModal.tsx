@@ -44,6 +44,7 @@ export default function BuyItemModal(props: Props) {
           name: props.item.name,
           imgUrl: props.item.imgUrl,
           type: props.item.type,
+          effects: props.item.effects,
           qty: 1,
           ...(props.item.happiness != null
             ? { happiness: props.item.happiness }
@@ -82,7 +83,7 @@ export default function BuyItemModal(props: Props) {
           <Text>{`🌱 Current Sprouts: ${sprouts}`}</Text>
         </DialogDescription>
       </DialogHeader>
-      <View className="grid gap-4">
+      <View className="gap-4">
         <View className="items-center">
           <Image
             source={{ uri: props.item.imgUrl }}
@@ -92,6 +93,9 @@ export default function BuyItemModal(props: Props) {
         </View>
         <Text className="font-semibold">{`🏷️ Name: ${props.item.name}`}</Text>
         <Text className="font-semibold">{`🪙 Cost: ${props.item.sproutCost}`}</Text>
+        <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
+          <Text className="text-sm italic">{props.item.effects[0]}</Text>
+        </View>
         <Text>Would you like to purchase this item?</Text>
       </View>
       <DialogFooter>

@@ -26,6 +26,7 @@ export interface ItemCardData {
     sproutCost?: number;
     qty?: number;
     happiness?: number;
+    effects: string[];
 }
 
 export interface EquippedItems {

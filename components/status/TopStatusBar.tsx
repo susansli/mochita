@@ -1,39 +1,123 @@
-import { topStatusHappinessAtom, topStatusSproutsAtom } from "@/atoms/homeAtoms";
+import { equippedItemsAtom } from "@/atoms/bagAtoms";
+import {
+  topStatusHappinessAtom,
+  topStatusSproutsAtom,
+} from "@/atoms/homeAtoms";
+import { isMailAvailableAtom, isTravelingAtom } from "@/atoms/travelAtoms";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useAtomValue } from "jotai";
-import { View } from "react-native";
-import uuid from 'react-native-uuid';
+import { useFocusEffect } from "expo-router";
+import { useAtom, useAtomValue } from "jotai";
+import { Mail, MapPin } from "lucide-react-native";
+import { useCallback, useState } from "react";
+import { Pressable, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
+import uuid from "react-native-uuid";
+import Spacer from "../utility/Spacer";
+import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
+import TravelUpdatesModal from "./TravelUpdatesModal";
+import TravelPostcardModal from "./TravelPostcardModal";
 
 export default function TopStatusBar() {
+  const currentHappiness = useAtomValue(topStatusHappinessAtom);
+  const currentSprouts = useAtomValue(topStatusSproutsAtom);
+  const equippedItems = useAtomValue(equippedItemsAtom);
+  const isTraveling = useAtomValue(isTravelingAtom);
+  const [isMailAvailable, setIsMailAvailable] = useAtom(isMailAvailableAtom);
 
-    const currentHappiness = useAtomValue(topStatusHappinessAtom);
-    const currentSprouts = useAtomValue(topStatusSproutsAtom);
+  const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
+  const [isMailOpen, setIsMailOpen] = useState<boolean>(false);
 
-    function renderHappinessHearts() {
-        const greyedOut: number = MAX_HAPPINESS - currentHappiness;
-        const heartElements: React.ReactElement[] = [];
-        for (let i = 0; i < currentHappiness; i++) {
-            heartElements.push(<FontAwesome key={uuid.v4()} name="heart" size={25} color="firebrick" />)
-        }
-        for (let i = 0; i < greyedOut; i++) {
-            heartElements.push(<FontAwesome key={uuid.v4()} name="heart" size={25} color="gray" />)
-        }
-        return heartElements;
+  const scale = useSharedValue<number>(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  useFocusEffect(
+    useCallback(() => {
+      scale.value = withRepeat(
+        withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+        -1,
+        true
+      );
+    }, [scale])
+  );
+
+  function renderHappinessHearts() {
+    const greyedOut: number = MAX_HAPPINESS - currentHappiness;
+    const heartElements: React.ReactElement[] = [];
+    for (let i = 0; i < currentHappiness; i++) {
+      heartElements.push(
+        <FontAwesome key={uuid.v4()} name="heart" size={25} color="firebrick" />
+      );
     }
+    for (let i = 0; i < greyedOut; i++) {
+      heartElements.push(
+        <FontAwesome key={uuid.v4()} name="heart" size={25} color="gray" />
+      );
+    }
+    return heartElements;
+  }
 
-    return (
-        <View className="bg-teal-500 w-full p-5 rounded-b-lg">
-            <View className="flex-row gap-2 mb-4">
-                <TopStatusBarItem text={`✨ Day: 0${topStatusBarData.day}`} />
-                <TopStatusBarItem text={`☀️ ${topStatusBarData.weather}`} />
-                <TopStatusBarItem text={`🌱 Sprouts: ${currentSprouts}`} />
-            </View>
-            <View className="flex-row gap-1">
-                {renderHappinessHearts()}
-            </View>
+  return (
+    <View className="bg-teal-500 w-full p-5 rounded-b-lg">
+      <View className="flex-row gap-2 mb-4">
+        <TopStatusBarItem text={`✨ Day: 0${topStatusBarData.day}`} />
+        <TopStatusBarItem text={`☀️ ${topStatusBarData.weather}`} />
+        <TopStatusBarItem text={`🌱 Sprouts: ${currentSprouts}`} />
+      </View>
+      <View className="flex-row gap-1 align-center">
+        {renderHappinessHearts()}
+        <Spacer />
+        <View className="flex-row gap-[0.75rem]">
+
+          {isMailAvailable && (
+            <Dialog open={isMailOpen} onOpenChange={setIsMailOpen}>
+              <DialogTrigger asChild>
+                <Pressable>
+                  <Animated.View
+                    className="bg-teal-400 p-[0.3rem] rounded-full"
+                    style={animatedStyle}
+                  >
+                    <Mail size={18} color="white" strokeWidth={2} />
+                  </Animated.View>
+                </Pressable>
+              </DialogTrigger>
+              <TravelPostcardModal />
+            </Dialog>
+          )}
+          {((Object.keys(equippedItems).length === 4 &&
+            currentHappiness === MAX_HAPPINESS) ||
+            isTraveling) && (
+            <Dialog open={isTravelOpen} onOpenChange={setIsTravelOpen}>
+              <DialogTrigger asChild>
+                <Pressable>
+                  <Animated.View
+                    className="bg-teal-400 p-[0.3rem] rounded-full"
+                    style={animatedStyle}
+                  >
+                    <MapPin size={18} color="white" strokeWidth={2} />
+                  </Animated.View>
+                </Pressable>
+              </DialogTrigger>
+              {isTraveling ? (
+                <TravelUpdatesModal />
+              ) : (
+                <StartTravelModal setClose={() => setIsTravelOpen(false)} />
+              )}
+            </Dialog>
+          )}
         </View>
-    );
+      </View>
+    </View>
+  );
 }
