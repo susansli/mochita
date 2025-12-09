@@ -1,6 +1,7 @@
 import { equippedItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
-import { mochitaSpeechAtom, topStatusHappinessAtom } from "@/atoms/homeAtoms";
+import { mochitaSpeechAtom } from "@/atoms/homeAtoms";
 import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
+import { isTravelingAtom } from "@/atoms/travelAtoms";
 import MochitaSpeech from "@/components/home/MochitaSpeech";
 import TopStatusBar from "@/components/status/TopStatusBar";
 import { SPEECH_TIME } from "@/util/constants";
@@ -13,29 +14,44 @@ import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 function Tutorial() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
   const setIsNavbarCollapsed = useSetAtom(isNavbarCollapsedAtom);
-  const [mochitaSpeech, setMochitaSpeech] = useAtom(mochitaSpeechAtom);
-  const [isMaxHappinessNotif, setIsMaxHappinessMotif] = useAtom(isMaxHappinessNotifAtom);
+  const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
+  const [isMaxHappinessNotif, setIsMaxHappinessNotif] = useAtom(
+    isMaxHappinessNotifAtom
+  );
   const equippedItems = useAtomValue(equippedItemsAtom);
-  
+  const isTraveling = useAtomValue(isTravelingAtom);
+
   const [isTopStatusHidden, _setIsTopStatusHidden] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
-      if (isMaxHappinessNotif) {
+      if (isTraveling) {
+        setMochitaSpeech("");
+        setIsMaxHappinessNotif(false);
+      }
+      if (isMaxHappinessNotif && !isTraveling) {
         if (Object.keys(equippedItems).length === 4) {
           setMochitaSpeech("Nya~ all ready to go traveling!");
         } else {
           setMochitaSpeech("I feel ready to travel, but I still need gear!");
         }
-        setIsMaxHappinessMotif(false);
+        setIsMaxHappinessNotif(false);
       }
-      setTimeout(() => setMochitaSpeech(''), SPEECH_TIME);
+      setTimeout(() => setMochitaSpeech(""), SPEECH_TIME);
       setIsNavbarHidden(false);
       return () => {
         setIsNavbarHidden(true);
         setIsNavbarCollapsed(true);
       };
-    }, [setIsNavbarHidden, setIsNavbarCollapsed, setMochitaSpeech, mochitaSpeech, isMaxHappinessNotif, setIsMaxHappinessMotif])
+    }, [
+      setIsNavbarHidden,
+      setIsNavbarCollapsed,
+      setMochitaSpeech,
+      isMaxHappinessNotif,
+      setIsMaxHappinessNotif,
+      equippedItems,
+      isTraveling
+    ])
   );
 
   return (
@@ -48,11 +64,21 @@ function Tutorial() {
       />
       {!isTopStatusHidden && <TopStatusBar />}
       <MochitaSpeech />
-      <Image
-        source={{ uri: "https://i.imgur.com/n66Cu8e.gif" }}
-        className="h-[60%] w-[60%] absolute mt-[85%] ml-[40%]"
-        resizeMode="contain"
-      />
+      <>
+        {!isTraveling ? (
+          <Image
+            source={{ uri: "https://i.imgur.com/n66Cu8e.gif" }}
+            className="h-[60%] w-[60%] absolute mt-[85%] ml-[40%]"
+            resizeMode="contain"
+          />
+        ) : (
+          <Image
+            source={{ uri: "https://i.imgur.com/Bl1Mrby.png" }}
+            className="h-[50%] w-[50%] absolute mt-[97%] ml-[48%]"
+            resizeMode="contain"
+          />
+        )}
+      </>
     </View>
   );
 }
