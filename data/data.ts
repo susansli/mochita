@@ -25,6 +25,7 @@ export const bottomNavData: BottomNavData[] = [
   {
     name: "map-marker",
     label: "Travel",
+    link: "/pages/travel",
   },
   {
     name: "chevron-right",
