@@ -9,11 +9,15 @@ import {
 } from "../ui/dialog";
 import { Text } from "../ui/text";
 
-export default function TravelPostcardModal() {
+interface Props {
+  title?: string
+}
+
+export default function TravelPostcardModal(props: Props) {
   return (
     <DialogContent className="sm">
       <DialogHeader>
-        <DialogTitle>You received a postcard!</DialogTitle>
+        <DialogTitle>{props?.title ? props.title : "You received a postcard!"}</DialogTitle>
       </DialogHeader>
       <View className="grid gap-4 mt-[1rem]">
         <View className="items-center">
