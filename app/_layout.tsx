@@ -34,6 +34,7 @@ export default function RootLayout() {
             <Stack.Screen name="pages/journal" options={{ headerShown: false }} />
             <Stack.Screen name="pages/journal-entry" options={{ headerShown: false }} />
             <Stack.Screen name="pages/travel" options={{ headerShown: false }} />
+            <Stack.Screen name="pages/travel-details" options={{ headerShown: false }} />
           </Stack>
         </NotifierWrapper>
       </ThemeProvider>
