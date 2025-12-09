@@ -1,12 +1,10 @@
 import { equippedItemsAtom } from "@/atoms/bagAtoms";
 import {
-    topStatusHappinessAtom,
-    topStatusSproutsAtom,
+  topStatusHappinessAtom,
+  topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
-import {
-    Dialog,
-    DialogTrigger
-} from "@/components/ui/dialog";
+import { isTravelingAtom } from "@/atoms/travelAtoms";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,23 +14,25 @@ import { MapPin } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
-    Easing,
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withTiming,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import Spacer from "../utility/Spacer";
 import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
+import TravelUpdatesModal from "./TravelUpdatesModal";
 
 export default function TopStatusBar() {
   const currentHappiness = useAtomValue(topStatusHappinessAtom);
   const currentSprouts = useAtomValue(topStatusSproutsAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
+  const isTraveling = useAtomValue(isTravelingAtom);
 
-  const [isBeginTravelModalOpen, setIsBeginTravelModalOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const scale = useSharedValue<number>(1);
   const animatedStyle = useAnimatedStyle(() => ({
@@ -75,22 +75,27 @@ export default function TopStatusBar() {
       <View className="flex-row gap-1 align-center">
         {renderHappinessHearts()}
         <Spacer />
-        {Object.keys(equippedItems).length === 4 &&
-          currentHappiness === MAX_HAPPINESS && (
-            <Dialog open={isBeginTravelModalOpen}  onOpenChange={setIsBeginTravelModalOpen}>
-              <DialogTrigger asChild>
-                <Pressable>
-                  <Animated.View
-                    className="bg-teal-400 p-[0.3rem] rounded-full"
-                    style={animatedStyle}
-                  >
-                    <MapPin size={18} color="white" strokeWidth={2} />
-                  </Animated.View>
-                </Pressable>
-              </DialogTrigger>
-              <StartTravelModal setClose={() => setIsBeginTravelModalOpen(false)} />
-            </Dialog>
-          )}
+        {((Object.keys(equippedItems).length === 4 &&
+          currentHappiness === MAX_HAPPINESS) ||
+          isTraveling) && (
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Pressable>
+                <Animated.View
+                  className="bg-teal-400 p-[0.3rem] rounded-full"
+                  style={animatedStyle}
+                >
+                  <MapPin size={18} color="white" strokeWidth={2} />
+                </Animated.View>
+              </Pressable>
+            </DialogTrigger>
+            {isTraveling ? (
+              <TravelUpdatesModal setClose={() => setIsOpen(false)} />
+            ) : (
+              <StartTravelModal setClose={() => setIsOpen(false)} />
+            )}
+          </Dialog>
+        )}
       </View>
     </View>
   );
