@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NotifierWrapper } from "react-native-notifier";
 import "react-native-reanimated";
 import { NAV_THEME } from "../lib/theme";
+import Soundtrack from "@/components/audio/Soundtrack";
 
 // Directive to make RNU doctor happy
 if (Platform.OS === "web") {
@@ -22,6 +23,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={NAV_THEME[colorScheme]}>
         <PortalHost />
+        <Soundtrack />
         <NotifierWrapper>
           <Stack>
             <Stack.Screen name="pages/index" options={{ headerShown: false }} />
