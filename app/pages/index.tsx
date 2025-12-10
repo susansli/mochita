@@ -4,7 +4,7 @@ import { Text } from "@/components/ui/text";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useSetAtom } from "jotai";
 import { useCallback } from "react";
-import { Image, View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import "../../global.css";
 
@@ -20,24 +20,27 @@ function Index() {
   );
 
   return (
-    <View className="justify-center items-center flex-1">
-      <Image
-        source={{ uri: "https://i.imgur.com/mx0wroQ.png" }}
-        className="h-60 w-full mb-10"
-        resizeMode="contain"
-      />
-      <Text className="text-xl font-bold mb-10">mochita: a self-care game</Text>
+    <ImageBackground
+      source={{ uri: "https://i.imgur.com/KPhy3Xn.jpeg" }}
+      resizeMode="cover"
+      className="justify-center items-center flex-1"
+    >
+      <View className="mt-[80%] items-center">
+        <Text className="text-2xl font-bold mb-10 text-white">
+          mochita: a self-care game
+        </Text>
 
-      <Button variant="outline" disabled className="w-60 h-12 mb-3">
-        <Text>Continue</Text>
-      </Button>
-      <Button
-        className="w-60 h-12"
-        onTouchEnd={() => router.push("/pages/tutorial")}
-      >
-        <Text>New Game</Text>
-      </Button>
-    </View>
+        <Button disabled className="w-60 h-12 mb-3 bg-white">
+          <Text className="text-gray-500">Continue</Text>
+        </Button>
+        <Button
+          className="w-60 h-12 bg-teal-800"
+          onTouchEnd={() => router.push("/pages/tutorial")}
+        >
+          <Text>New Game</Text>
+        </Button>
+      </View>
+    </ImageBackground>
   );
 }
 

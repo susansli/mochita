@@ -9,6 +9,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import BottomNav from "../nav/BottomNav";
+import Soundtrack from "../audio/Soundtrack";
 
 interface Props {
   children?: React.ReactNode;
@@ -27,6 +28,7 @@ export default function PageWrapper(props: Props) {
           pointerEvents="box-none"
           className="absolute left-0 right-0 bottom-0 z-50"
         >
+          <Soundtrack />
           {!isNavbarHidden && (
             <View
               style={{ paddingBottom: Math.max(insets.bottom, 8) }}
