@@ -20,7 +20,7 @@ export default function Soundtrack() {
           { 
             shouldPlay: true, 
             isLooping: true,
-            volume: 0.5,
+            volume: 1.0,
           }
         );
         
