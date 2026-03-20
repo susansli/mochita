@@ -1,4 +1,5 @@
 export const MAX_HAPPINESS: number = 5;
+export const STARTING_HAPPINESS: number = 2;
 export const MAX_GOALS: number = 5;
 export const GOAL_SPROUTS: number = 50;
 export const JOURNAL_SPROUTS: number = 10;
