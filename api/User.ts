@@ -21,9 +21,11 @@ async function createNewUser() {
     if (!response) {
       return null;
     }
-    return response.data;
+  
+    return response.data.data;
 
-  } catch {
+  } catch (e){
+    console.error("Error: ", e);
     return null;
   }
 }

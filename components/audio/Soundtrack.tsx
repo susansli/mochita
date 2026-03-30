@@ -30,7 +30,7 @@ export default function Soundtrack() {
       }
     }
 
-    playSound();
+    // playSound();
 
     return () => {
       if (sound) {

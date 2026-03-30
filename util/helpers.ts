@@ -1,4 +1,5 @@
 import { ItemType } from "./enums";
+import * as SecureStore from "expo-secure-store";
 
 export function returnItemType(itemType: ItemType): string {
     switch (itemType) {
@@ -29,4 +30,8 @@ export function dateFromMMDDYYYY(s: string): Date {
 
 export function truncateText(text: string, length: number, ellipses?: boolean) {
   return `${text.slice(0, length)}${(ellipses && text.length > length) ? "..." : ""}`;
+}
+
+export async function getUserId() {
+  return await SecureStore.getItemAsync("userId");
 }
