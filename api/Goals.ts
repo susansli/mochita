@@ -67,9 +67,36 @@ async function getGoalsByDate(date: string) {
   }
 }
 
+async function markGoalAsComplete(goalId: string) {
+  try {
+    const response = await axios.put(
+      `${SERVER_URL}/goals/completeGoal`,
+      {
+        goalId: goalId
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to mark goal as complete");
+      return null;
+    }
+    return response?.data?.data;
+
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+}
+
 const GoalsApi = {
     createGoal,
-    getGoalsByDate
+    getGoalsByDate,
+    markGoalAsComplete
 };
 
 export default GoalsApi;

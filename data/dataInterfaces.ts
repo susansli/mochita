@@ -17,6 +17,7 @@ export interface GoalCardData {
     index: number;
     goal: string;
     isComplete: boolean;
+    goalId: string;
 }
 
 export interface ItemCardData {

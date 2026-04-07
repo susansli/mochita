@@ -26,12 +26,15 @@ import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
 import TravelUpdatesModal from "./TravelUpdatesModal";
 import TravelPostcardModal from "./TravelPostcardModal";
+import UserApi from "@/api/User";
 
 export default function TopStatusBar() {
-  const currentHappiness = useAtomValue(topStatusHappinessAtom);
-  const currentSprouts = useAtomValue(topStatusSproutsAtom);
-  const equippedItems = useAtomValue(equippedItemsAtom);
-  const isTraveling = useAtomValue(isTravelingAtom);
+
+  const [currentHappiness, setCurrentHappiness] = useAtom(topStatusHappinessAtom);
+  const [currentSprouts, setCurrentSprouts] = useAtom(topStatusSproutsAtom);
+  const [equippedItems, setEquippedItems] = useAtom(equippedItemsAtom); // TODO
+  const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
+
   const [isMailAvailable, _setIsMailAvailable] = useAtom(isMailAvailableAtom);
 
   const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
@@ -52,7 +55,21 @@ export default function TopStatusBar() {
     }, [scale])
   );
 
-  
+
+  useFocusEffect(
+    useCallback(() => {
+      const getUserData = async () => {
+        const userData = await UserApi.getUser();
+        if (!userData) {
+          return;
+        }
+        setCurrentHappiness(userData.happiness);
+        setCurrentSprouts(userData.sprouts);
+        setIsTraveling(userData.isTraveling);
+      };
+      void getUserData();
+    }, [setCurrentHappiness, setCurrentSprouts, setIsTraveling])
+  );
 
   function renderHappinessHearts() {
     const greyedOut: number = MAX_HAPPINESS - currentHappiness;
