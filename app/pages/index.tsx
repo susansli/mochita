@@ -1,4 +1,3 @@
-import User from "@/api/User";
 import { isNavbarHiddenAtom } from "@/atoms/navAtoms";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -10,6 +9,7 @@ import { ImageBackground, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import "../../global.css";
 import { getUserId } from "@/util/helpers";
+import UserApi from "@/api/User";
 
 function Index() {
   const router = useRouter();
@@ -38,7 +38,7 @@ function Index() {
       setIsLoading(true);
       // call API
 
-      const response = await User.createNewUser();
+      const response = await UserApi.createNewUser();
 
       if (!response) {
         console.error("Failed to create new user");

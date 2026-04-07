@@ -16,7 +16,7 @@ import {
 } from "../ui/dialog";
 import { Text } from "../ui/text";
 import { Textarea } from "../ui/textarea";
-import Goals from "@/api/Goals";
+import GoalsApi from "@/api/Goals";
 
 interface Props {
   setClose: () => void;
@@ -27,27 +27,47 @@ export default function CreateGoalsModal(props: Props) {
   const [goalList, setGoalList] = useAtom<GoalCardData[]>(goalsListAtom);
   const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
-  function saveGoal() {
-    const newGoal: GoalCardData = {
-      index: goalList.length + 1,
-      goal: text,
-      isComplete: false,
-    };
+  async function saveGoal() {
 
-    // create goal on BE in the background
     const date = (new Date()).toLocaleDateString();
-    void Goals.createGoal(date, text);
+    const newGoal = await GoalsApi.createGoal(date, text);
 
-    setGoalList([...goalList, newGoal]);
+    if (!newGoal) {
+      Notifier.showNotification({
+        title: `Error creating goal`,
+        description: `Please try again.`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+      });
+      return;
+    }
+
+    const goalList = await GoalsApi.getGoalsByDate(date);
+
+    if (!goalList) {
+      Notifier.showNotification({
+        title: `Error fetching goals`,
+        description: `Please try again.`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+      });
+      return;
+    }
+
+    setGoalList([...goalList]);
     setText("");
+
     props.setClose();
+
     Notifier.showNotification({
       title: `New goal added!`,
       description: `Complete this goal today to earn ${GOAL_SPROUTS} 🌱!`,
       showAnimationDuration: 800,
       showEasing: Easing.bounce,
     });
+
     setMochitaSpeech("Wow, a new goal~💖 good luck, friend!");
+
   }
 
   return (
@@ -73,7 +93,7 @@ export default function CreateGoalsModal(props: Props) {
         </Button>
         <Button
           disabled={goalList.length === MAX_GOALS || !text.length}
-          onTouchEnd={saveGoal}
+          onTouchEnd={async () => await saveGoal()}
         >
           <Text>{`${goalList.length === MAX_GOALS ? "Max Goals Reached" : "Save Goal"}`}</Text>
         </Button>

@@ -30,8 +30,8 @@ async function createNewUser() {
   }
 }
 
-const User = {
+const UserApi = {
   createNewUser,
 }
 
-export default User;
+export default UserApi;

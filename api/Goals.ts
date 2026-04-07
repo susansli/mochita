@@ -35,8 +35,41 @@ async function createGoal(date: string, text: string) {
   }
 }
 
-const Goals = {
-    createGoal
+async function getGoalsByDate(date: string) {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
+    const response = await axios.post(
+      `${SERVER_URL}/goals/getGoalsForDate`,
+      {
+        userId: userId,
+        date: date,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to fetch goals");
+      return null;
+    }
+    return response?.data?.data;
+
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+}
+
+const GoalsApi = {
+    createGoal,
+    getGoalsByDate
 };
 
-export default Goals;
+export default GoalsApi;
