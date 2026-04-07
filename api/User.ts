@@ -22,7 +22,7 @@ async function createNewUser() {
       return null;
     }
   
-    return response.data.data;
+    return response?.data?.data;
 
   } catch (e){
     console.error("Error: ", e);

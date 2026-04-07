@@ -4,7 +4,7 @@ import { isNavbarCollapsedAtom, isNavbarHiddenAtom } from "@/atoms/navAtoms";
 import { isTravelingAtom } from "@/atoms/travelAtoms";
 import MochitaSpeech from "@/components/home/MochitaSpeech";
 import TopStatusBar from "@/components/status/TopStatusBar";
-import { SPEECH_TIME } from "@/util/constants";
+import { EQUIPPED_ITEMS_NUMBER, SPEECH_TIME } from "@/util/constants";
 import { useFocusEffect } from "expo-router";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useState } from "react";
@@ -18,6 +18,7 @@ function Tutorial() {
   const [isMaxHappinessNotif, setIsMaxHappinessNotif] = useAtom(
     isMaxHappinessNotifAtom
   );
+  
   const equippedItems = useAtomValue(equippedItemsAtom);
   const isTraveling = useAtomValue(isTravelingAtom);
 
@@ -30,7 +31,7 @@ function Tutorial() {
         setIsMaxHappinessNotif(false);
       }
       if (isMaxHappinessNotif && !isTraveling) {
-        if (Object.keys(equippedItems).length === 4) {
+        if (Object.keys(equippedItems).length === EQUIPPED_ITEMS_NUMBER) {
           setMochitaSpeech("Nya~ all ready to go traveling!");
         } else {
           setMochitaSpeech("I feel ready to travel, but I still need gear!");

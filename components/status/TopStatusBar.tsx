@@ -32,7 +32,7 @@ export default function TopStatusBar() {
   const currentSprouts = useAtomValue(topStatusSproutsAtom);
   const equippedItems = useAtomValue(equippedItemsAtom);
   const isTraveling = useAtomValue(isTravelingAtom);
-  const [isMailAvailable, setIsMailAvailable] = useAtom(isMailAvailableAtom);
+  const [isMailAvailable, _setIsMailAvailable] = useAtom(isMailAvailableAtom);
 
   const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
   const [isMailOpen, setIsMailOpen] = useState<boolean>(false);
@@ -51,6 +51,8 @@ export default function TopStatusBar() {
       );
     }, [scale])
   );
+
+  
 
   function renderHappinessHearts() {
     const greyedOut: number = MAX_HAPPINESS - currentHappiness;

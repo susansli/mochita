@@ -16,6 +16,7 @@ import {
 } from "../ui/dialog";
 import { Text } from "../ui/text";
 import { Textarea } from "../ui/textarea";
+import Goals from "@/api/Goals";
 
 interface Props {
   setClose: () => void;
@@ -32,6 +33,11 @@ export default function CreateGoalsModal(props: Props) {
       goal: text,
       isComplete: false,
     };
+
+    // create goal on BE in the background
+    const date = (new Date()).toLocaleDateString();
+    void Goals.createGoal(date, text);
+
     setGoalList([...goalList, newGoal]);
     setText("");
     props.setClose();

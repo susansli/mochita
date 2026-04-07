@@ -41,6 +41,10 @@ export default function CompleteGoalModal(props: Props) {
 
     setGoalList(newGoals);
     setSprouts(sprouts + GOAL_SPROUTS);
+
+    // update user sprouts on BE - can just do this in the background
+    
+
     setMochitaSpeech("One down! Keep up the great work, nya~💖");
     
   }

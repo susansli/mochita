@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import { ImageBackground, View } from "react-native";
 import { withPageWrapper } from "../../components/wrappers/withPageWrapper";
 import "../../global.css";
+import { getUserId } from "@/util/helpers";
 
 function Index() {
   const router = useRouter();
@@ -16,12 +17,21 @@ function Index() {
   const setIsNavbarHidden = useSetAtom(isNavbarHiddenAtom);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isContinueDisabled, setIsContinueDisabled] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
       setIsNavbarHidden(true);
+      void checkExistingUser();
     }, [setIsNavbarHidden]),
   );
+
+  async function checkExistingUser() {
+    const user = await getUserId();
+    if (user) {
+      setIsContinueDisabled(false);
+    }
+  }
 
   async function newGame() {
     try {
@@ -30,14 +40,10 @@ function Index() {
 
       const response = await User.createNewUser();
 
-      console.log(response);
-
       if (!response) {
         console.error("Failed to create new user");
         return;
       }
-
-      console.log("response: ", response);
 
       const userId = response.id;
 
@@ -51,6 +57,7 @@ function Index() {
         console.error("Failed to store user id");
         return;
       }
+
       router.push("/pages/tutorial");
     } catch (e) {
       console.error("Error creating new user:", e);
@@ -70,7 +77,11 @@ function Index() {
           mochita: a self-care game
         </Text>
 
-        <Button disabled className="w-60 h-12 mb-3 bg-white">
+        <Button
+          disabled={isContinueDisabled}
+          className="w-60 h-12 mb-3 bg-white"
+          onTouchEnd={() => router.push("/pages/tutorial")}
+        >
           <Text className="text-gray-500">Continue</Text>
         </Button>
         <Button
