@@ -44,7 +44,8 @@ export default function BuyItemModal(props: Props) {
           name: props.item.name,
           imgUrl: props.item.imgUrl,
           type: props.item.type,
-          effects: props.item.effects,
+          effectText: props.item.effectText,
+          flavorText: props.item.flavorText,
           qty: 1,
           ...(props.item.happiness != null
             ? { happiness: props.item.happiness }
@@ -94,7 +95,7 @@ export default function BuyItemModal(props: Props) {
         <Text className="font-semibold">{`🏷️ Name: ${props.item.name}`}</Text>
         <Text className="font-semibold">{`🪙 Cost: ${props.item.sproutCost}`}</Text>
         <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
-          <Text className="text-sm italic">{props.item.effects[0]}</Text>
+          <Text className="text-sm italic">{props.item.flavorText}</Text>
         </View>
         <Text>Would you like to purchase this item?</Text>
       </View>

@@ -1,4 +1,5 @@
-import { inventoryItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
+import InventoryApi from "@/api/Inventory";
+import { inventoryItemsAtom, isMaxHappinessNotifAtom, storeItemsAtom } from "@/atoms/bagAtoms";
 import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import BagContents from "@/components/bag/BagContents";
 import ItemCard from "@/components/bag/ItemCard";
@@ -9,10 +10,9 @@ import { Dialog } from "@/components/ui/dialog";
 import { Text } from "@/components/ui/text";
 import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
-import { storeItemsList } from "@/data/data";
 import { ItemCardData } from "@/data/dataInterfaces";
 import { useFocusEffect } from "expo-router";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useCallback, useState } from "react";
 import { ScrollView, View } from "react-native";
 
@@ -22,6 +22,9 @@ enum ActiveBagPage {
 }
 
 function Bag() {
+
+  const [storeItems, setStoreItems] = useAtom<ItemCardData[]>(storeItemsAtom);
+
   const inventory = useAtomValue<ItemCardData[]>(inventoryItemsAtom);
   const sprouts = useAtomValue(topStatusSproutsAtom);
   const isMaxHappinessNotif = useAtomValue(isMaxHappinessNotifAtom);
@@ -38,9 +41,21 @@ function Bag() {
       }, [isMaxHappinessNotif, setIsTravelNotif])
     );
 
+  useFocusEffect(
+      useCallback(() => {
+        if (storeItems.length === 0) {
+          const getStoreItems = async () => {
+            const items = await InventoryApi.getAllStoreItems();
+            setStoreItems(items);
+          }
+          void getStoreItems();
+        }
+      }, [setStoreItems, storeItems.length])
+    );
+
   function renderItemCards() {
     if (active === ActiveBagPage.STORE) {
-      return storeItemsList.map((item, i) => (
+      return storeItems.map((item, i) => (
         <View key={i} className="w-1/2 p-2">
           <ItemCard item={item} />
         </View>
