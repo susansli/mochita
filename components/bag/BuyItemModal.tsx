@@ -95,7 +95,12 @@ export default function BuyItemModal(props: Props) {
         <Text className="font-semibold">{`🏷️ Name: ${props.item.name}`}</Text>
         <Text className="font-semibold">{`🪙 Cost: ${props.item.sproutCost}`}</Text>
         <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
-          <Text className="text-sm italic">{props.item.flavorText}</Text>
+          <Text className={`text-sm italic text-center ${!(props.item?.happiness) ? "mb-[0.25rem]": ""}`}>{props.item.flavorText}</Text>
+          <>{!(props.item?.happiness) && (
+            <Text className="text-sm font-semibold italic text-center">
+              ✨ {props.item.effectText}
+            </Text>
+          )}</>
         </View>
         <Text>Would you like to purchase this item?</Text>
       </View>
