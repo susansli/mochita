@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default function InventoryItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
+  const [inventory, setInventory] = useAtom<ItemCardData[] | null>(inventoryItemsAtom);
   const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
@@ -52,8 +52,9 @@ export default function InventoryItemModal(props: Props) {
     if (isButtonDisabled()) {
       return;
     }
+    // TODO
 
-    let newInventory = [...inventory];
+    let newInventory: ItemCardData[] = [];
 
     if (props.item.type === ItemType.TREAT) {
       if (props.item?.happiness) {
@@ -127,6 +128,20 @@ export default function InventoryItemModal(props: Props) {
           />
         </View>
         <Text className="font-semibold">{`🎒 Qty: ${props.item.qty}`}</Text>
+        <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
+          <Text
+            className={`text-sm italic text-center ${!props.item?.happiness ? "mb-[0.25rem]" : ""}`}
+          >
+            {props.item.flavorText}
+          </Text>
+          <>
+            {!props.item?.happiness && (
+              <Text className="text-sm font-semibold italic text-center">
+                ✨ {props.item.effectText}
+              </Text>
+            )}
+          </>
+        </View>
         <Text>
           {isButtonDisabled()
             ? "You need to free this slot before you can equip another item."

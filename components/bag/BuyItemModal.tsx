@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default function BuyItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
+  const setInventory = useSetAtom(inventoryItemsAtom);
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
 
   function isButtonDisabled() {
