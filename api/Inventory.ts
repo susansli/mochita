@@ -94,10 +94,49 @@ async function getInventoryItems() {
   }
 }
 
+async function equipBagItem(itemId: string, qty: number) {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${SERVER_URL}/inventory/equipItem`,
+      {
+        itemId: itemId,
+        userId: userId,
+        qty: qty 
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to equip item");
+      return null;
+    }
+
+    console.log("Equip item response: ", response.data.data);
+
+    return response?.data?.data;
+
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+
+}
+
 const InventoryApi = {
   getAllStoreItems,
   buyItem,
-  getInventoryItems
+  getInventoryItems,
+  equipBagItem
 };
 
 export default InventoryApi;

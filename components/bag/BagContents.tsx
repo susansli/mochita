@@ -15,10 +15,10 @@ export default function BagContents() {
         <BagSlot item={equippedItems[ItemType.TICKET]} />
       </View>
       <View className="w-1/2 p-2 items-center">
-        <BagSlot item={equippedItems[ItemType.BAG]} />
+        <BagSlot item={equippedItems[ItemType.LUCKY_CHARM]} />
       </View>
       <View className="w-1/2 p-2 items-center">
-        <BagSlot item={equippedItems[ItemType.LUCKY_CHARM]} />
+        <BagSlot item={equippedItems[ItemType.BAG]} />
       </View>
       <View className="w-1/2 p-2 items-center">
         <BagSlot item={equippedItems[ItemType.SNACK]} />
