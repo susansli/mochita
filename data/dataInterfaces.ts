@@ -21,6 +21,7 @@ export interface GoalCardData {
 }
 
 export interface ItemCardData {
+    id: string;
     name: string;
     imgUrl: string;
     type: ItemType;

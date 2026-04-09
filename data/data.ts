@@ -1,7 +1,5 @@
-import { ItemType } from "@/util/enums";
 import {
   BottomNavData,
-  ItemCardData,
   TagData,
   TopStatusBarData,
 } from "./dataInterfaces";
