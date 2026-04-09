@@ -1,5 +1,9 @@
 import InventoryApi from "@/api/Inventory";
-import { inventoryItemsAtom, isMaxHappinessNotifAtom, storeItemsAtom } from "@/atoms/bagAtoms";
+import {
+  inventoryItemsAtom,
+  isMaxHappinessNotifAtom,
+  storeItemsAtom,
+} from "@/atoms/bagAtoms";
 import { topStatusSproutsAtom } from "@/atoms/homeAtoms";
 import BagContents from "@/components/bag/BagContents";
 import ItemCard from "@/components/bag/ItemCard";
@@ -22,10 +26,11 @@ enum ActiveBagPage {
 }
 
 function Bag() {
-
   const [storeItems, setStoreItems] = useAtom<ItemCardData[]>(storeItemsAtom);
 
-  const inventory = useAtomValue<ItemCardData[]>(inventoryItemsAtom);
+  const [inventory, setInventory] = useAtom<ItemCardData[] | null>(
+    inventoryItemsAtom,
+  );
   const sprouts = useAtomValue(topStatusSproutsAtom);
   const isMaxHappinessNotif = useAtomValue(isMaxHappinessNotifAtom);
 
@@ -33,25 +38,37 @@ function Bag() {
   const [isTravelNotif, setIsTravelNotif] = useState<boolean>(false);
 
   useFocusEffect(
-      useCallback(() => {
-        if (isMaxHappinessNotif) {
-          setIsTravelNotif(true);
-        }
-       
-      }, [isMaxHappinessNotif, setIsTravelNotif])
-    );
+    useCallback(() => {
+      if (isMaxHappinessNotif) {
+        setIsTravelNotif(true);
+      }
+    }, [isMaxHappinessNotif, setIsTravelNotif]),
+  );
 
   useFocusEffect(
-      useCallback(() => {
-        if (storeItems.length === 0) {
-          const getStoreItems = async () => {
-            const items = await InventoryApi.getAllStoreItems();
-            setStoreItems(items);
-          }
-          void getStoreItems();
-        }
-      }, [setStoreItems, storeItems.length])
-    );
+    useCallback(() => {
+      if (storeItems.length === 0) {
+        const getStoreItems = async () => {
+          const items = await InventoryApi.getAllStoreItems();
+          setStoreItems(items);
+        };
+        void getStoreItems();
+      }
+    }, [setStoreItems, storeItems.length]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const getInventoryItems = async () => {
+        const items = await InventoryApi.getInventoryItems();
+        setInventory(items);
+      };
+
+      if (!inventory) {
+        void getInventoryItems();
+      }
+    }, [inventory, setInventory]),
+  );
 
   function renderItemCards() {
     if (active === ActiveBagPage.STORE) {
@@ -61,11 +78,14 @@ function Bag() {
         </View>
       ));
     } else {
-      return inventory.map((item, i) => (
-        <View key={i} className="w-1/2 p-2">
-          <ItemCard item={item} />
-        </View>
-      ));
+      if (inventory) {
+        return inventory.map((item, i) => (
+          <View key={i} className="w-1/2 p-2">
+            <ItemCard item={item} />
+          </View>
+        ));
+      }
+      return [];
     }
   }
 

@@ -61,9 +61,43 @@ async function buyItem(itemId: string) {
   }
 }
 
+async function getInventoryItems() {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${SERVER_URL}/inventory/getUserInventory`,
+      {
+        userId: userId
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to fetch inventory items");
+      return null;
+    }
+    return response?.data?.data;
+
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+
+  }
+}
+
 const InventoryApi = {
   getAllStoreItems,
-  buyItem
+  buyItem,
+  getInventoryItems
 };
 
 export default InventoryApi;
