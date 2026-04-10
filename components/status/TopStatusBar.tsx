@@ -35,7 +35,7 @@ export default function TopStatusBar() {
   const equippedItems = useAtomValue(equippedItemsAtom); // TODO
   const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
 
-  const [isMailAvailable, _setIsMailAvailable] = useAtom(isMailAvailableAtom);
+  const isMailAvailable = useAtomValue<boolean>(isMailAvailableAtom);
 
   const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
   const [isMailOpen, setIsMailOpen] = useState<boolean>(false);

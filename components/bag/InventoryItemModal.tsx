@@ -31,7 +31,7 @@ interface Props {
 
 export default function InventoryItemModal(props: Props) {
   const setInventory = useSetAtom(inventoryItemsAtom);
-  const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
+  const setHappiness = useSetAtom(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
   const setMaxHappinessNotif = useSetAtom(isMaxHappinessNotifAtom);
