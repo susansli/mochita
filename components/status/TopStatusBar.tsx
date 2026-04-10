@@ -32,7 +32,7 @@ export default function TopStatusBar() {
 
   const [currentHappiness, setCurrentHappiness] = useAtom(topStatusHappinessAtom);
   const [currentSprouts, setCurrentSprouts] = useAtom(topStatusSproutsAtom);
-  const [equippedItems, setEquippedItems] = useAtom(equippedItemsAtom); // TODO
+  const equippedItems = useAtomValue(equippedItemsAtom); // TODO
   const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
 
   const [isMailAvailable, _setIsMailAvailable] = useAtom(isMailAvailableAtom);

@@ -94,7 +94,7 @@ async function getInventoryItems() {
   }
 }
 
-async function equipBagItem(itemId: string, qty: number) {
+async function equipBagItem(itemId: string) {
   try {
     const userId = await SecureStore.getItemAsync("userId");
     if (!userId) {
@@ -107,7 +107,6 @@ async function equipBagItem(itemId: string, qty: number) {
       {
         itemId: itemId,
         userId: userId,
-        qty: qty 
       },
       {
         headers: {
@@ -121,8 +120,6 @@ async function equipBagItem(itemId: string, qty: number) {
       return null;
     }
 
-    console.log("Equip item response: ", response.data.data);
-
     return response?.data?.data;
 
   } catch (e) {
@@ -132,11 +129,47 @@ async function equipBagItem(itemId: string, qty: number) {
 
 }
 
+async function getUserEquippedItems() {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${SERVER_URL}/inventory/getUserEquippedItems`,
+      {
+        userId: userId
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to fetch equipped items");
+      return null;
+    }
+
+    console.log("Equipped items response: ", response.data.data);
+
+    return response?.data?.data;
+
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+}
+
 const InventoryApi = {
   getAllStoreItems,
   buyItem,
   getInventoryItems,
-  equipBagItem
+  equipBagItem,
+  getUserEquippedItems
 };
 
 export default InventoryApi;

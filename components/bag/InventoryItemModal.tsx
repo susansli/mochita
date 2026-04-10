@@ -86,7 +86,6 @@ export default function InventoryItemModal(props: Props) {
       if (props.item.qty) {
         const updatedEquippedItems = await InventoryApi.equipBagItem(
           props.item.id,
-          props.item.qty,
         );
         if (updatedEquippedItems) {
           setEquippedItems(updatedEquippedItems);

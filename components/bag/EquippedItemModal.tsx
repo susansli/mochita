@@ -21,27 +21,15 @@ interface Props {
 }
 
 export default function EquippedItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
+  const [inventory, setInventory] = useAtom<ItemCardData[] | null>(inventoryItemsAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
 
   function unequipItem() {
-    const newEquippedItems = { ...equippedItems };
-    const newInventory = [...inventory];
 
-    delete newEquippedItems[props.item.type];
-    const itemIndex = newInventory.findIndex(
-      (item) => item.name === props.item.name
-    );
-    if (itemIndex >= 0) {
-      newInventory[itemIndex]?.qty && newInventory[itemIndex].qty++;
-    } else {
-      newInventory.push(props.item);
-    }
+    // TODO
+   
     props.setClose();
-
-    setEquippedItems(newEquippedItems);
-    setInventory(newInventory);
 
     Notifier.showNotification({
         title: `Unequipped ${props.item.name} from Mochita!`,
