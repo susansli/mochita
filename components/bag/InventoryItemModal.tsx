@@ -22,6 +22,7 @@ import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
 import InventoryApi from "@/api/Inventory";
+import UserApi from "@/api/User";
 
 interface Props {
   item: ItemCardData;
@@ -29,9 +30,7 @@ interface Props {
 }
 
 export default function InventoryItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[] | null>(
-    inventoryItemsAtom,
-  );
+  const setInventory = useSetAtom(inventoryItemsAtom);
   const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
@@ -59,19 +58,48 @@ export default function InventoryItemModal(props: Props) {
     if (isButtonDisabled()) {
       return;
     }
-    // TODO
-
-    let newInventory: ItemCardData[] = [];
 
     if (props.item.type === ItemType.TREAT) {
-      if (props.item?.happiness) {
-        const newHappiness = happiness + props.item.happiness;
-        setHappiness(newHappiness);
-        if (newHappiness === MAX_HAPPINESS) {
+      if (props.item?.happiness && props.item?.qty) {
+        const usedTreatRes = await InventoryApi.consumeTreat(
+          props.item.id,
+          props.item.qty,
+        );
+
+        if (!usedTreatRes) {
+          Notifier.showNotification({
+            title: `Error to use ${props.item.name}`,
+            description: `Failed to use ${props.item.name}. Please try again.`,
+            showAnimationDuration: 800,
+            showEasing: Easing.bounce,
+          });
+          return;
+        }
+
+        const updatedUserData = await UserApi.getUser();
+
+        if (!updatedUserData) {
+          Notifier.showNotification({
+            title: `Error to update user data`,
+            description: `Failed to update user data after using ${props.item.name}. Please try again.`,
+            showAnimationDuration: 800,
+            showEasing: Easing.bounce,
+          });
+          return;
+        }
+
+        setHappiness(updatedUserData.happiness);
+
+        if (updatedUserData.happiness === MAX_HAPPINESS) {
           setMaxHappinessNotif(true);
         } else {
           setMochitaSpeech("Thanks for the treat! I loved it!");
         }
+      }
+
+      const updatedInventory = await InventoryApi.getInventoryItems();
+      if (updatedInventory) {
+        setInventory(updatedInventory);
       }
 
       props.setClose();

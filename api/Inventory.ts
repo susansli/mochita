@@ -27,7 +27,6 @@ async function getAllStoreItems() {
 
 async function buyItem(itemId: string) {
   try {
-
     const userId = await SecureStore.getItemAsync("userId");
     if (!userId) {
       console.error("No user ID found in secure storage");
@@ -39,7 +38,7 @@ async function buyItem(itemId: string) {
       {
         itemId: itemId,
         userId: userId,
-        qty: 1
+        qty: 1,
       },
       {
         headers: {
@@ -52,9 +51,7 @@ async function buyItem(itemId: string) {
       console.error("Failed to buy item");
       return null;
     }
-    console.log("Buy item response: ", response.data);
     return response?.data?.data;
-
   } catch (e) {
     console.error("Error: ", e);
     return null;
@@ -72,7 +69,7 @@ async function getInventoryItems() {
     const response = await axios.post(
       `${SERVER_URL}/inventory/getUserInventory`,
       {
-        userId: userId
+        userId: userId,
       },
       {
         headers: {
@@ -86,11 +83,9 @@ async function getInventoryItems() {
       return null;
     }
     return response?.data?.data;
-
   } catch (e) {
     console.error("Error: ", e);
     return null;
-
   }
 }
 
@@ -121,12 +116,10 @@ async function equipBagItem(itemId: string) {
     }
 
     return response?.data?.data;
-
   } catch (e) {
     console.error("Error: ", e);
     return null;
   }
-
 }
 
 async function getUserEquippedItems() {
@@ -140,7 +133,7 @@ async function getUserEquippedItems() {
     const response = await axios.post(
       `${SERVER_URL}/inventory/getUserEquippedItems`,
       {
-        userId: userId
+        userId: userId,
       },
       {
         headers: {
@@ -154,10 +147,41 @@ async function getUserEquippedItems() {
       return null;
     }
 
-    console.log("Equipped items response: ", response.data.data);
+    return response?.data?.data;
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+}
+
+async function consumeTreat(itemId: string, qty: number) {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${SERVER_URL}/inventory/useTreat`,
+      {
+        userId: userId,
+        itemId: itemId,
+        qty: qty,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to use treat");
+      return null;
+    }
 
     return response?.data?.data;
-
   } catch (e) {
     console.error("Error: ", e);
     return null;
@@ -169,7 +193,8 @@ const InventoryApi = {
   buyItem,
   getInventoryItems,
   equipBagItem,
-  getUserEquippedItems
+  getUserEquippedItems,
+  consumeTreat
 };
 
 export default InventoryApi;
