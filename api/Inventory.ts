@@ -188,13 +188,43 @@ async function consumeTreat(itemId: string, qty: number) {
   }
 }
 
+async function unequipBagItem(itemId: string) {
+  try {
+    const userId = await SecureStore.getItemAsync("userId");
+
+    const response = await axios.post(
+      `${SERVER_URL}/inventory/unequipItem`,
+      {
+        userId: userId,
+        itemId: itemId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response) {
+      console.error("Failed to unequip item");
+      return null;
+    }
+
+    return response?.data?.data;
+  } catch (e) {
+    console.error("Error: ", e);
+    return null;
+  }
+}
+
 const InventoryApi = {
   getAllStoreItems,
   buyItem,
   getInventoryItems,
   equipBagItem,
   getUserEquippedItems,
-  consumeTreat
+  consumeTreat,
+  unequipBagItem
 };
 
 export default InventoryApi;
