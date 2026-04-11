@@ -7,6 +7,7 @@ import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { DialogClose, DialogContent, DialogFooter } from "../ui/dialog";
 import { Text } from "../ui/text";
+import { aggregateEvents } from "@/util/helpers";
 
 interface Props {
   setClose: () => void;
@@ -19,10 +20,15 @@ export default function StartTravelModal(props: Props) {
   const setIsMailAvailable = useSetAtom(isMailAvailableAtom); // placeholder
 
   function renderItemDescriptions() {
-    return Object.keys(equippedItems).map((key, i) => {
+    const effectTextArray = Object.keys(equippedItems).map(
+      (key) => equippedItems[key].effectText,
+    );
+    const transformedArray = aggregateEvents(effectTextArray);
+    console.log("transformed array: ", transformedArray);
+    return transformedArray.map((text, i) => {
       return (
         <Text key={i} className="italic text-sm">
-          {equippedItems[key].effects[0]}
+          {text}
         </Text>
       );
     });

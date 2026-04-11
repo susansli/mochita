@@ -14,11 +14,8 @@ import { Mail, MapPin } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
-  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
-  withTiming,
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import Spacer from "../utility/Spacer";
@@ -27,12 +24,14 @@ import TopStatusBarItem from "./TopStatusBarItem";
 import TravelUpdatesModal from "./TravelUpdatesModal";
 import TravelPostcardModal from "./TravelPostcardModal";
 import UserApi from "@/api/User";
+import { EquippedItems } from "@/data/dataInterfaces";
+import InventoryApi from "@/api/Inventory";
 
 export default function TopStatusBar() {
 
   const [currentHappiness, setCurrentHappiness] = useAtom(topStatusHappinessAtom);
   const [currentSprouts, setCurrentSprouts] = useAtom(topStatusSproutsAtom);
-  const equippedItems = useAtomValue(equippedItemsAtom); // TODO
+  const [equippedItems, setEquippedItems] = useAtom<EquippedItems>(equippedItemsAtom);
   const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
 
   const isMailAvailable = useAtomValue<boolean>(isMailAvailableAtom);
@@ -47,15 +46,17 @@ export default function TopStatusBar() {
 
   useFocusEffect(
     useCallback(() => {
-      scale.value = withRepeat(
-        withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
-        -1,
-        true
-      );
-    }, [scale])
+     const fetchEquippedItems = async () => {
+      const items = await InventoryApi.getUserEquippedItems();
+      if (items) {
+        setEquippedItems(items);
+      }
+     }
+     void fetchEquippedItems();
+    }, [setEquippedItems])
   );
 
-
+  
   useFocusEffect(
     useCallback(() => {
       const getUserData = async () => {
