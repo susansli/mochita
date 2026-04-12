@@ -191,6 +191,10 @@ async function consumeTreat(itemId: string, qty: number) {
 async function unequipBagItem(itemId: string) {
   try {
     const userId = await SecureStore.getItemAsync("userId");
+    if (!userId) {
+      console.error("No user ID found in secure storage");
+      return null;
+    }
 
     const response = await axios.post(
       `${SERVER_URL}/inventory/unequipItem`,

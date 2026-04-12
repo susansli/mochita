@@ -51,3 +51,17 @@ export interface TagData {
     value: string;
     color: string;
 }
+
+export interface TripData {
+    userId: string;
+    locationImgUrl: string;
+    locationName: string;
+    locationFlavorText: string;
+    tripDuration: number;
+    tripEndProb: number;
+    tripEasterEggProb: number;
+    currentTravelStageText: string;
+    startDateString: string;
+    endDateString?: string;
+    daysElapsed: number;
+}
