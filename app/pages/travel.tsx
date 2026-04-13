@@ -1,14 +1,48 @@
+import TravelApi from "@/api/Travel";
+import { postcardDataAtom, tripDataAtom } from "@/atoms/travelAtoms";
 import PageHeader from "@/components/nav/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import Spacer from "@/components/utility/Spacer";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
-import { useRouter } from "expo-router";
+import { PostcardData, TripData } from "@/data/dataInterfaces";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useAtom } from "jotai";
+import { useCallback } from "react";
 import { View, Image, Pressable } from "react-native";
 
 function Travel() {
   const router = useRouter();
+
+  const [tripData, setTripData] = useAtom<TripData | null>(tripDataAtom);
+  const [postcardData, setPostcardData] = useAtom<PostcardData | null>(
+    postcardDataAtom,
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchTravelData = async () => {
+        if (!tripData) {
+          const tripResponse = await TravelApi.getActiveTripData();
+          if (tripResponse) {
+            setTripData(tripResponse);
+          }
+        } else {
+          if (!postcardData) {
+            const postcardResponse = await TravelApi.getPostcardData(
+              tripData.id,
+            );
+            if (postcardResponse) {
+              setPostcardData(postcardResponse);
+            }
+          }
+        }
+      };
+
+      void fetchTravelData();
+    }, [postcardData, setPostcardData, setTripData, tripData]),
+  );
 
   return (
     <View className="flex-1 bg-teal-100 p-5">
@@ -30,26 +64,32 @@ function Travel() {
         </Button>
       </View>
 
-      {/* Placeholder */}
       <View>
-        <View className="bg-teal-500 p-[1rem] w-full rounded-lg flex-row gap-[1rem] items-center">
-          <Image
-            source={{ uri: "https://i.imgur.com/JSLrfOY.png" }}
-            className="h-[4rem] w-[4rem]"
-            resizeMode="contain"
-          />
+        {tripData && postcardData && (
+          <View className="bg-teal-500 p-[1rem] w-full rounded-lg flex-row gap-[1rem] items-center">
+            <Image
+              source={{ uri: tripData.locationImgUrl }}
+              className="h-[4rem] w-[4rem] rounded-full"
+              resizeMode="cover"
+            />
 
-          <Pressable className="flex-1" onTouchEnd={() => router.push("/pages/travel-details")}>
-            <Text className="text-white text-lg font-bold mb-[1rem]">
-              Beachside Adventure
-            </Text>
-            <View className="flex-row items-center">
-              <Text className="text-white text-sm font-medium">12/10/2025</Text>
-              <Spacer />
-              <Text className="text-white text-sm font-medium">1 Memory</Text>
-            </View>
-          </Pressable>
-        </View>
+            <Pressable
+              className="flex-1"
+              onTouchEnd={() => router.push("/pages/travel-details")}
+            >
+              <Text className="text-white text-lg font-bold mb-[1rem]">
+                {tripData.locationName}
+              </Text>
+              <View className="flex-row items-center">
+                <Text className="text-white text-sm font-medium">
+                  {tripData.startDateString}
+                </Text>
+                <Spacer />
+                <Text className="text-white text-sm font-medium">1 Memory</Text>
+              </View>
+            </Pressable>
+          </View>
+        )}
       </View>
     </View>
   );

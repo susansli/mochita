@@ -3,7 +3,7 @@ import {
   topStatusHappinessAtom,
   topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
-import { isMailAvailableAtom, isTravelingAtom, postcardDataAtom } from "@/atoms/travelAtoms";
+import { isTravelingAtom, postcardDataAtom } from "@/atoms/travelAtoms";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
