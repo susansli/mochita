@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
+import InventoryApi from "@/api/Inventory";
+import UserApi from "@/api/User";
 
 interface Props {
   item: ItemCardData;
@@ -22,47 +24,43 @@ interface Props {
 }
 
 export default function BuyItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
+  const setInventory = useSetAtom(inventoryItemsAtom);
   const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
 
   function isButtonDisabled() {
-    return (props?.item?.sproutCost && props.item.sproutCost > sprouts) || false;
+    return (
+      (props?.item?.sproutCost && props.item.sproutCost > sprouts) || false
+    );
   }
 
-  function buyItem() {
+  async function buyItem() {
     if (isButtonDisabled()) {
       return;
     }
 
     if (props?.item?.sproutCost && props.item.sproutCost <= sprouts) {
-      const newInventory = [...inventory];
-      const itemIndex = newInventory.findIndex(
-        (item) => item.name === props.item.name && item.qty && item.qty++
+      const newInventoryAfterPurchase = await InventoryApi.buyItem(
+        props.item.id,
       );
-      if (itemIndex < 0) {
-        const newItem: ItemCardData = {
-          name: props.item.name,
-          imgUrl: props.item.imgUrl,
-          type: props.item.type,
-          effects: props.item.effects,
-          qty: 1,
-          ...(props.item.happiness != null
-            ? { happiness: props.item.happiness }
-            : {}),
-        };
+      const updatedUser = await UserApi.getUser();
 
-        newItem.sproutCost && delete newItem.sproutCost;
-        newInventory.push(newItem);
+      if (newInventoryAfterPurchase) {
+        setInventory(newInventoryAfterPurchase);
       }
-      setInventory(newInventory);
-      setSprouts(sprouts - props.item.sproutCost);
+
+      if (updatedUser) {
+        setSprouts(updatedUser.sprouts);
+      }
+
       props.setClose();
       Notifier.showNotification({
         title: `Purchased ${returnItemType(props.item.type)}!`,
-        description: `The item was added to your inventory for ${props.item.sproutCost} 🌱!`,
+        description: `Added the ${props.item.name} to your inventory!`,
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
+        hideOnPress: true,
       });
+
     } else {
       props.setClose();
       Notifier.showNotification({
@@ -94,7 +92,18 @@ export default function BuyItemModal(props: Props) {
         <Text className="font-semibold">{`🏷️ Name: ${props.item.name}`}</Text>
         <Text className="font-semibold">{`🪙 Cost: ${props.item.sproutCost}`}</Text>
         <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
-          <Text className="text-sm italic">{props.item.effects[0]}</Text>
+          <Text
+            className={`text-sm italic text-center ${!props.item?.happiness ? "mb-[0.25rem]" : ""}`}
+          >
+            {props.item.flavorText}
+          </Text>
+          <>
+            {!props.item?.happiness && (
+              <Text className="text-sm font-semibold italic text-center">
+                ✨ {props.item.effectText}
+              </Text>
+            )}
+          </>
         </View>
         <Text>Would you like to purchase this item?</Text>
       </View>
@@ -106,7 +115,7 @@ export default function BuyItemModal(props: Props) {
         </DialogClose>
         <Button
           disabled={isButtonDisabled()}
-          onTouchEnd={buyItem}
+          onTouchEnd={async () => await buyItem()}
         >
           <Text>Make Purchase</Text>
         </Button>

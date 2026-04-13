@@ -7,13 +7,14 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { EquippedItems, ItemCardData } from "@/data/dataInterfaces";
+import { ItemCardData } from "@/data/dataInterfaces";
 import { returnItemType } from "@/util/helpers";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
+import InventoryApi from "@/api/Inventory";
 
 interface Props {
   item: ItemCardData;
@@ -21,27 +22,23 @@ interface Props {
 }
 
 export default function EquippedItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
-  const [equippedItems, setEquippedItems] =
-    useAtom<EquippedItems>(equippedItemsAtom);
+  const setInventory = useSetAtom(inventoryItemsAtom);
+  const setEquippedItems = useSetAtom(equippedItemsAtom);
 
-  function unequipItem() {
-    const newEquippedItems = { ...equippedItems };
-    const newInventory = [...inventory];
+  async function unequipItem() {
 
-    delete newEquippedItems[props.item.type];
-    const itemIndex = newInventory.findIndex(
-      (item) => item.name === props.item.name
-    );
-    if (itemIndex >= 0) {
-      newInventory[itemIndex]?.qty && newInventory[itemIndex].qty++;
-    } else {
-      newInventory.push(props.item);
+    const updatedEquippedItems = await InventoryApi.unequipBagItem(props.item.id);
+
+    if (updatedEquippedItems) {
+      setEquippedItems(updatedEquippedItems);
     }
-    props.setClose();
 
-    setEquippedItems(newEquippedItems);
-    setInventory(newInventory);
+    const updatedUserInventory = await InventoryApi.getInventoryItems();
+    if (updatedUserInventory) {
+      setInventory(updatedUserInventory);
+    }
+
+    props.setClose();
 
     Notifier.showNotification({
         title: `Unequipped ${props.item.name} from Mochita!`,
@@ -75,7 +72,7 @@ export default function EquippedItemModal(props: Props) {
             <Text>Cancel</Text>
           </Button>
         </DialogClose>
-        <Button onTouchEnd={unequipItem}>
+        <Button onTouchEnd={async () => await unequipItem()}>
           <Text>Return Item to Bag</Text>
         </Button>
       </DialogFooter>

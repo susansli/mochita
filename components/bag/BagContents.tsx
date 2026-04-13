@@ -1,13 +1,26 @@
 import { equippedItemsAtom } from "@/atoms/bagAtoms";
 import { EquippedItems } from "@/data/dataInterfaces";
 import { ItemType } from "@/util/enums";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { View } from "react-native";
 import BagSlot from "./BagSlot";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import InventoryApi from "@/api/Inventory";
 
 export default function BagContents() {
 
-  const equippedItems = useAtomValue<EquippedItems>(equippedItemsAtom);
+  const [equippedItems, setEquippedItems] = useAtom<EquippedItems>(equippedItemsAtom);
+
+  useFocusEffect(
+      useCallback(() => {
+        const getEquippedItems = async () => {
+          const items = await InventoryApi.getUserEquippedItems();
+          setEquippedItems(items);
+        };
+        void getEquippedItems();
+      }, [setEquippedItems]),
+    );
 
   return (
     <View className="flex-row flex-wrap p-5 rounded-lg bg-teal-500 mt-7">
@@ -15,10 +28,10 @@ export default function BagContents() {
         <BagSlot item={equippedItems[ItemType.TICKET]} />
       </View>
       <View className="w-1/2 p-2 items-center">
-        <BagSlot item={equippedItems[ItemType.BAG]} />
+        <BagSlot item={equippedItems[ItemType.LUCKY_CHARM]} />
       </View>
       <View className="w-1/2 p-2 items-center">
-        <BagSlot item={equippedItems[ItemType.LUCKY_CHARM]} />
+        <BagSlot item={equippedItems[ItemType.BAG]} />
       </View>
       <View className="w-1/2 p-2 items-center">
         <BagSlot item={equippedItems[ItemType.SNACK]} />

@@ -1,7 +1,5 @@
-import { ItemType } from "@/util/enums";
 import {
   BottomNavData,
-  ItemCardData,
   TagData,
   TopStatusBarData,
 } from "./dataInterfaces";
@@ -39,67 +37,6 @@ export const topStatusBarData: TopStatusBarData = {
   weather: "Sunny",
   sprouts: 0,
 };
-
-export const storeItemsList: ItemCardData[] = [
-  {
-    imgUrl: "https://i.imgur.com/aQTw3oT.png",
-    type: ItemType.TICKET,
-    sproutCost: 15,
-    name: "Airline Ticket",
-    effects: ["+25% new location discovered"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/8sRVZeg.png",
-    type: ItemType.TICKET,
-    sproutCost: 10,
-    name: "Tram Pass",
-    effects: ["+10% new location discovered"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/foOAmc4.png",
-    type: ItemType.LUCKY_CHARM,
-    sproutCost: 8,
-    name: "Doki Charm",
-    effects: ["+5% postcard sent home"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/iqiSuJw.png",
-    type: ItemType.SNACK,
-    sproutCost: 4,
-    name: "O-Bento",
-    effects: ["-15% trip ends from hunger"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/zHa81k2.png",
-    type: ItemType.SNACK,
-    sproutCost: 3,
-    name: "Vitasoy",
-    effects: ["-10% trip ends from hunger"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/o0BDkZE.png",
-    type: ItemType.BAG,
-    sproutCost: 6,
-    name: "Mochipack",
-    effects: ["+10% rare item found"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/DHU6WVe.png",
-    type: ItemType.TREAT,
-    sproutCost: 3,
-    name: "Taiyaki",
-    happiness: 2,
-    effects: ["+2❤️  to Mochita's happiness"]
-  },
-  {
-    imgUrl: "https://i.imgur.com/fPq9ZjK.png",
-    type: ItemType.TREAT,
-    sproutCost: 2,
-    name: "Nigiri Toy",
-    happiness: 1,
-    effects: ["+1❤️  to Mochita's happiness"]
-  },
-];
 
 export const tagData: TagData[] = [
   { label: "Personal", value: "0", color: "#f97316" },

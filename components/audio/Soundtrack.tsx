@@ -1,11 +1,10 @@
-import { Audio } from 'expo-av';
-import { useEffect, useState } from 'react';
+import { Audio } from "expo-av";
+import { useEffect, useState } from "react";
 
 export default function Soundtrack() {
+  const [sound, setSound] = useState<Audio.Sound>();
 
-    const [sound, setSound] = useState<Audio.Sound>();
-
-    useEffect(() => {
+  useEffect(() => {
     async function playSound() {
       try {
         await Audio.setAudioModeAsync({
@@ -16,14 +15,14 @@ export default function Soundtrack() {
 
         const { sound: newSound } = await Audio.Sound.createAsync(
           // eslint-disable-next-line @typescript-eslint/no-require-imports
-          require('../../assets/music/bgm.m4a'),
-          { 
-            shouldPlay: true, 
+          require("../../assets/music/bgm.m4a"),
+          {
+            shouldPlay: true,
             isLooping: true,
             volume: 1.0,
-          }
+          },
         );
-        
+
         setSound(newSound);
       } catch (error) {
         console.error("Error loading soundtrack:", error);
@@ -34,11 +33,10 @@ export default function Soundtrack() {
 
     return () => {
       if (sound) {
-        sound.unloadAsync(); 
+        sound.unloadAsync();
       }
     };
   }, []);
 
   return null;
-
 }

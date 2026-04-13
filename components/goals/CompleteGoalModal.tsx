@@ -13,6 +13,9 @@ import {
   DialogTitle
 } from "../ui/dialog";
 import { Text } from "../ui/text";
+import GoalsApi from "@/api/Goals";
+import { User } from "lucide-react-native";
+import UserApi from "@/api/User";
 
 interface Props {
   setClose: () => void;
@@ -21,17 +24,44 @@ interface Props {
 
 export default function CompleteGoalModal(props: Props) {
   const [goalList, setGoalList] = useAtom<GoalCardData[]>(goalsListAtom);
-  const [sprouts, setSprouts] = useAtom<number>(topStatusSproutsAtom);
   const setMochitaSpeech = useSetAtom(mochitaSpeechAtom);
 
-  function markGoalAsComplete() {
-    const newGoals = [...goalList];
-    newGoals.forEach((goal) => {
-      if (!props.data.isComplete && goal.index === props.data.index) {
-        goal.isComplete = true;
-      }
-    });
-    props.setClose();
+  async function markGoalAsComplete() {
+
+    const completedGoal = await GoalsApi.markGoalAsComplete(props.data.goalId);
+
+    if (!completedGoal) {
+      Notifier.showNotification({
+        title: `Uh oh! Something went wrong.`,
+        description: `Please try again.`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+      });
+
+      props.setClose();
+
+      return;
+    }
+
+    const date = (new Date()).toLocaleDateString();
+
+    const updatedGoals = await GoalsApi.getGoalsByDate(date);
+
+    if (!updatedGoals) {
+      Notifier.showNotification({
+        title: `Uh oh! Something went wrong.`,
+        description: `Please try again.`,
+        showAnimationDuration: 800,
+        showEasing: Easing.bounce,
+      });
+
+      props.setClose();
+
+      return;
+    }
+
+    setGoalList([...updatedGoals]);
+
     Notifier.showNotification({
       title: `Yay! Goal completed!`,
       description: `You've earned ${GOAL_SPROUTS} 🌱 - Mochita is proud of you!`,
@@ -39,8 +69,8 @@ export default function CompleteGoalModal(props: Props) {
       showEasing: Easing.bounce,
     });
 
-    setGoalList(newGoals);
-    setSprouts(sprouts + GOAL_SPROUTS);
+    props.setClose();
+    
     setMochitaSpeech("One down! Keep up the great work, nya~💖");
     
   }
@@ -57,7 +87,7 @@ export default function CompleteGoalModal(props: Props) {
         <Button variant="outline" onTouchEnd={props.setClose}>
           <Text>Cancel</Text>
         </Button>
-        <Button disabled={props.data.isComplete} onTouchEnd={() => !props.data.isComplete && markGoalAsComplete()}>
+        <Button disabled={props.data.isComplete} onTouchEnd={async () => !props.data.isComplete && await markGoalAsComplete()}>
           <Text>{`${props.data.isComplete ? "Goal Already Completed" : "Mark as Complete"}`}</Text>
         </Button>
       </DialogFooter>

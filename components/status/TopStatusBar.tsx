@@ -3,7 +3,7 @@ import {
   topStatusHappinessAtom,
   topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
-import { isMailAvailableAtom, isTravelingAtom } from "@/atoms/travelAtoms";
+import { isTravelingAtom, postcardDataAtom } from "@/atoms/travelAtoms";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
@@ -14,11 +14,8 @@ import { Mail, MapPin } from "lucide-react-native";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
-  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
-  withTiming,
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import Spacer from "../utility/Spacer";
@@ -26,13 +23,18 @@ import StartTravelModal from "./StartTravelModal";
 import TopStatusBarItem from "./TopStatusBarItem";
 import TravelUpdatesModal from "./TravelUpdatesModal";
 import TravelPostcardModal from "./TravelPostcardModal";
+import UserApi from "@/api/User";
+import { EquippedItems } from "@/data/dataInterfaces";
+import InventoryApi from "@/api/Inventory";
 
 export default function TopStatusBar() {
-  const currentHappiness = useAtomValue(topStatusHappinessAtom);
-  const currentSprouts = useAtomValue(topStatusSproutsAtom);
-  const equippedItems = useAtomValue(equippedItemsAtom);
-  const isTraveling = useAtomValue(isTravelingAtom);
-  const [isMailAvailable, setIsMailAvailable] = useAtom(isMailAvailableAtom);
+
+  const [currentHappiness, setCurrentHappiness] = useAtom(topStatusHappinessAtom);
+  const [currentSprouts, setCurrentSprouts] = useAtom(topStatusSproutsAtom);
+  const [equippedItems, setEquippedItems] = useAtom<EquippedItems>(equippedItemsAtom);
+  const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
+
+  const postcardData = useAtomValue(postcardDataAtom);
 
   const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
   const [isMailOpen, setIsMailOpen] = useState<boolean>(false);
@@ -44,12 +46,30 @@ export default function TopStatusBar() {
 
   useFocusEffect(
     useCallback(() => {
-      scale.value = withRepeat(
-        withTiming(1.1, { duration: 500, easing: Easing.inOut(Easing.ease) }),
-        -1,
-        true
-      );
-    }, [scale])
+     const fetchEquippedItems = async () => {
+      const items = await InventoryApi.getUserEquippedItems();
+      if (items) {
+        setEquippedItems(items);
+      }
+     }
+     void fetchEquippedItems();
+    }, [setEquippedItems])
+  );
+
+  
+  useFocusEffect(
+    useCallback(() => {
+      const getUserData = async () => {
+        const userData = await UserApi.getUser();
+        if (!userData) {
+          return;
+        }
+        setCurrentHappiness(userData.happiness);
+        setCurrentSprouts(userData.sprouts);
+        setIsTraveling(userData.isTraveling);
+      };
+      void getUserData();
+    }, [setCurrentHappiness, setCurrentSprouts, setIsTraveling])
   );
 
   function renderHappinessHearts() {
@@ -80,7 +100,7 @@ export default function TopStatusBar() {
         <Spacer />
         <View className="flex-row gap-[0.75rem]">
 
-          {isMailAvailable && (
+          {postcardData && (
             <Dialog open={isMailOpen} onOpenChange={setIsMailOpen}>
               <DialogTrigger asChild>
                 <Pressable>

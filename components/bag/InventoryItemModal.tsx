@@ -1,4 +1,8 @@
-import { equippedItemsAtom, inventoryItemsAtom, isMaxHappinessNotifAtom } from "@/atoms/bagAtoms";
+import {
+  equippedItemsAtom,
+  inventoryItemsAtom,
+  isMaxHappinessNotifAtom,
+} from "@/atoms/bagAtoms";
 import { mochitaSpeechAtom, topStatusHappinessAtom } from "@/atoms/homeAtoms";
 import {
   DialogClose,
@@ -17,6 +21,8 @@ import { Image, View } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
 import { Text } from "../ui/text";
+import InventoryApi from "@/api/Inventory";
+import UserApi from "@/api/User";
 
 interface Props {
   item: ItemCardData;
@@ -24,8 +30,8 @@ interface Props {
 }
 
 export default function InventoryItemModal(props: Props) {
-  const [inventory, setInventory] = useAtom<ItemCardData[]>(inventoryItemsAtom);
-  const [happiness, setHappiness] = useAtom<number>(topStatusHappinessAtom);
+  const setInventory = useSetAtom(inventoryItemsAtom);
+  const setHappiness = useSetAtom(topStatusHappinessAtom);
   const [equippedItems, setEquippedItems] =
     useAtom<EquippedItems>(equippedItemsAtom);
   const setMaxHappinessNotif = useSetAtom(isMaxHappinessNotifAtom);
@@ -48,22 +54,52 @@ export default function InventoryItemModal(props: Props) {
     return false;
   }
 
-  function useInventoryItem() {
+  async function consumeInventoryItem() {
     if (isButtonDisabled()) {
       return;
     }
 
-    let newInventory = [...inventory];
-
     if (props.item.type === ItemType.TREAT) {
-      if (props.item?.happiness) {
-        const newHappiness = happiness + props.item.happiness;
-        setHappiness(newHappiness);
-        if (newHappiness === MAX_HAPPINESS) {
+      if (props.item?.happiness && props.item?.qty) {
+        const usedTreatRes = await InventoryApi.consumeTreat(
+          props.item.id,
+          props.item.qty,
+        );
+
+        if (!usedTreatRes) {
+          Notifier.showNotification({
+            title: `Error to use ${props.item.name}`,
+            description: `Failed to use ${props.item.name}. Please try again.`,
+            showAnimationDuration: 800,
+            showEasing: Easing.bounce,
+          });
+          return;
+        }
+
+        const updatedUserData = await UserApi.getUser();
+
+        if (!updatedUserData) {
+          Notifier.showNotification({
+            title: `Error to update user data`,
+            description: `Failed to update user data after using ${props.item.name}. Please try again.`,
+            showAnimationDuration: 800,
+            showEasing: Easing.bounce,
+          });
+          return;
+        }
+
+        setHappiness(updatedUserData.happiness);
+
+        if (updatedUserData.happiness === MAX_HAPPINESS) {
           setMaxHappinessNotif(true);
         } else {
           setMochitaSpeech("Thanks for the treat! I loved it!");
         }
+      }
+
+      const updatedInventory = await InventoryApi.getInventoryItems();
+      if (updatedInventory) {
+        setInventory(updatedInventory);
       }
 
       props.setClose();
@@ -74,40 +110,30 @@ export default function InventoryItemModal(props: Props) {
         showAnimationDuration: 800,
         showEasing: Easing.bounce,
       });
-
-
     } else {
-      const newEquippedItems = { ...equippedItems };
-
-      newEquippedItems[props.item.type] = props.item;
-
-      setEquippedItems(newEquippedItems);
-
-      props.setClose();
-
-      Notifier.showNotification({
-        title: `Equipped ${props.item.name} to Mochita!`,
-        description: `Mochita now has a ${returnItemType(props.item.type)} for her adventures!`,
-        showAnimationDuration: 800,
-        showEasing: Easing.bounce,
-      });
-    }
-
-    if (props.item.qty === 1) {
-      // remove item from inventory
-      newInventory = newInventory.filter(
-        (item) => item.name !== props.item.name
-      );
-    } else {
-      // decrease qty by 1
-      newInventory.forEach((item) => {
-        if (item.name === props.item.name && item?.qty) {
-          item.qty--;
+      if (props.item.qty) {
+        const updatedEquippedItems = await InventoryApi.equipBagItem(
+          props.item.id,
+        );
+        if (updatedEquippedItems) {
+          setEquippedItems(updatedEquippedItems);
         }
-      });
-    }
 
-    setInventory(newInventory);
+        const updatedInventory = await InventoryApi.getInventoryItems();
+        if (updatedInventory) {
+          setInventory(updatedInventory);
+        }
+
+        props.setClose();
+
+        Notifier.showNotification({
+          title: `Equipped ${props.item.name} to Mochita!`,
+          description: `Mochita now has a ${returnItemType(props.item.type)} for her adventures!`,
+          showAnimationDuration: 800,
+          showEasing: Easing.bounce,
+        });
+      }
+    }
   }
 
   return (
@@ -127,6 +153,20 @@ export default function InventoryItemModal(props: Props) {
           />
         </View>
         <Text className="font-semibold">{`🎒 Qty: ${props.item.qty}`}</Text>
+        <View className="w-full rounded-lg bg-teal-200 p-[0.5rem] items-center">
+          <Text
+            className={`text-sm italic text-center ${!props.item?.happiness ? "mb-[0.25rem]" : ""}`}
+          >
+            {props.item.flavorText}
+          </Text>
+          <>
+            {!props.item?.happiness && (
+              <Text className="text-sm font-semibold italic text-center">
+                ✨ {props.item.effectText}
+              </Text>
+            )}
+          </>
+        </View>
         <Text>
           {isButtonDisabled()
             ? "You need to free this slot before you can equip another item."
@@ -139,7 +179,10 @@ export default function InventoryItemModal(props: Props) {
             <Text>Cancel</Text>
           </Button>
         </DialogClose>
-        <Button disabled={isButtonDisabled()} onTouchEnd={useInventoryItem}>
+        <Button
+          disabled={isButtonDisabled()}
+          onTouchEnd={async () => await consumeInventoryItem()}
+        >
           <Text>
             {isButtonDisabled()
               ? `${returnItemType(props.item.type)} Already Equipped!`

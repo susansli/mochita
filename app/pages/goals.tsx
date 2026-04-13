@@ -1,3 +1,5 @@
+import { useFocusEffect } from "expo-router";
+import GoalsApi from "@/api/Goals";
 import { goalsListAtom } from "@/atoms/goalsAtoms";
 import CreateGoals from "@/components/goals/CreateGoals";
 import GoalsCard from "@/components/goals/GoalsCard";
@@ -6,11 +8,27 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import Hr from "@/components/utility/Hr";
 import { withPageWrapper } from "@/components/wrappers/withPageWrapper";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
+import { useCallback } from "react";
 import { View } from "react-native";
 
 function Goals() {
-  const goalsList = useAtomValue(goalsListAtom);
+  const [goalsList, setGoalList] = useAtom(goalsListAtom);
+
+  useFocusEffect(
+      useCallback(() => {
+        const setGoals = async () => {
+          const date = (new Date()).toLocaleDateString();
+          const goalList = await GoalsApi.getGoalsByDate(date);
+          if (!goalList) {
+            setGoalList([]);
+            return;
+          }
+          setGoalList([...goalList]);
+        };
+        void setGoals();
+      }, [setGoalList]),
+    );
 
   function renderGoalsList() {
     return goalsList.map((goal, i) => {

@@ -17,16 +17,19 @@ export interface GoalCardData {
     index: number;
     goal: string;
     isComplete: boolean;
+    goalId: string;
 }
 
 export interface ItemCardData {
+    id: string;
     name: string;
     imgUrl: string;
     type: ItemType;
     sproutCost?: number;
     qty?: number;
     happiness?: number;
-    effects: string[];
+    flavorText: string;
+    effectText: string;
 }
 
 export interface EquippedItems {
@@ -47,4 +50,24 @@ export interface TagData {
     label: string;
     value: string;
     color: string;
+}
+
+export interface TripData {
+    id: string;
+    userId: string;
+    locationImgUrl: string;
+    locationName: string;
+    locationFlavorText: string;
+    tripDuration: number;
+    tripEndProb: number;
+    tripEasterEggProb: number;
+    currentTravelStageText: string;
+    startDateString: string;
+    endDateString?: string;
+    daysElapsed: number;
+}
+export interface PostcardData  {
+    date: string;
+    imageUrl: string;
+    postcardText: string;
 }
