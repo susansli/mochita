@@ -1,11 +1,7 @@
 import { equippedItemsAtom } from "@/atoms/bagAtoms";
 import { topStatusHappinessAtom } from "@/atoms/homeAtoms";
-import {
-  isMailAvailableAtom,
-  isTravelingAtom,
-  tripDataAtom,
-} from "@/atoms/travelAtoms";
-import { useAtom, useSetAtom } from "jotai";
+import { isTravelingAtom, tripDataAtom } from "@/atoms/travelAtoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Image, View, ActivityIndicator } from "react-native";
 import { Easing, Notifier } from "react-native-notifier";
 import { Button } from "../ui/button";
@@ -15,6 +11,7 @@ import { aggregateEvents } from "@/util/helpers";
 import { EquippedItems } from "@/data/dataInterfaces";
 import { useState } from "react";
 import TravelApi from "@/api/Travel";
+import UserApi from "@/api/User";
 
 interface Props {
   setClose: () => void;
@@ -32,11 +29,9 @@ export default function StartTravelModal(props: Props) {
   );
   const [tripData, setTripData] = useAtom(tripDataAtom);
 
-  const [equippedItems, setEquippedItems] =
-    useAtom<EquippedItems>(equippedItemsAtom);
+  const equippedItems = useAtomValue<EquippedItems>(equippedItemsAtom);
   const setIsTraveling = useSetAtom(isTravelingAtom);
   const setHappiness = useSetAtom(topStatusHappinessAtom);
-  const setIsMailAvailable = useSetAtom(isMailAvailableAtom); // placeholder
 
   function renderItemDescriptions() {
     const effectTextArray = Object.keys(equippedItems).map(
@@ -70,13 +65,13 @@ export default function StartTravelModal(props: Props) {
     }
   }
 
-  function confirmTravel() {
-    setIsTraveling(true);
-    setEquippedItems({});
-    setHappiness(0);
-    setIsMailAvailable(true);
+  async function confirmTravel() {
+    const updatedUserData = await UserApi.getUser();
+    setHappiness(updatedUserData.happiness);
+    setIsTraveling(updatedUserData.isTraveling); // should be true
 
     props.setClose();
+
     Notifier.showNotification({
       title: `Mochita has left on a trip!`,
       description: `She will be back in 3 days. Remember to stay up to date with her adventures ❤️`,
@@ -124,18 +119,11 @@ export default function StartTravelModal(props: Props) {
   function renderTravelLoading() {
     return (
       <>
-        <Image
-          source={{
-            uri: "https://res.cloudinary.com/drt4r7tyw/image/upload/v1776028901/mochi-travel_nf3ex4.png",
-          }}
-          className="h-[15rem] w-[15rem] mb-[1rem]"
-          resizeMode="contain"
-        />
         <ActivityIndicator
           size="large"
           color="teal"
-          className="w-20 h-20"
-          style={{ transform: [{ scale: 2.2 }] }}
+          className="w-20 h-20 my-[1rem]"
+          style={{ transform: [{ scale: 3 }] }}
         />
         <Text className="text-center font-semibold mt-[1rem]">
           Wait while Mochita is packing. Do not close this modal!

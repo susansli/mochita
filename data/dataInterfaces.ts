@@ -53,6 +53,7 @@ export interface TagData {
 }
 
 export interface TripData {
+    id: string;
     userId: string;
     locationImgUrl: string;
     locationName: string;
@@ -64,4 +65,9 @@ export interface TripData {
     startDateString: string;
     endDateString?: string;
     daysElapsed: number;
+}
+export interface PostcardData  {
+    date: string;
+    imageUrl: string;
+    postcardText: string;
 }
