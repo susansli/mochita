@@ -26,11 +26,11 @@ function TravelDetails() {
               className="h-[10rem] w-full rounded-lg"
               resizeMode="cover"
             />
-            <View className="flex-row items-center">
-              <Text className="text-white font-bold">Postcard #1</Text>
-              <Spacer />
-              <Text className="text-white font-bold">12/10/2025</Text>
-            </View>
+                <View className="flex-row items-center">
+                  <Text className="text-white font-bold">Postcard #1</Text>
+                  <Spacer />
+                  <Text className="text-white font-bold">12/10/2025</Text>
+                </View>
           </Pressable>
         </DialogTrigger>
         <TravelPostcardModal title="Postcard #1: 12/10/2025" />

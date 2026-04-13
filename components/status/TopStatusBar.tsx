@@ -3,7 +3,7 @@ import {
   topStatusHappinessAtom,
   topStatusSproutsAtom,
 } from "@/atoms/homeAtoms";
-import { isMailAvailableAtom, isTravelingAtom } from "@/atoms/travelAtoms";
+import { isMailAvailableAtom, isTravelingAtom, postcardDataAtom } from "@/atoms/travelAtoms";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { topStatusBarData } from "@/data/data";
 import { MAX_HAPPINESS } from "@/util/constants";
@@ -34,7 +34,7 @@ export default function TopStatusBar() {
   const [equippedItems, setEquippedItems] = useAtom<EquippedItems>(equippedItemsAtom);
   const [isTraveling, setIsTraveling] = useAtom(isTravelingAtom);
 
-  const isMailAvailable = useAtomValue<boolean>(isMailAvailableAtom);
+  const postcardData = useAtomValue(postcardDataAtom);
 
   const [isTravelOpen, setIsTravelOpen] = useState<boolean>(false);
   const [isMailOpen, setIsMailOpen] = useState<boolean>(false);
@@ -100,7 +100,7 @@ export default function TopStatusBar() {
         <Spacer />
         <View className="flex-row gap-[0.75rem]">
 
-          {isMailAvailable && (
+          {postcardData && (
             <Dialog open={isMailOpen} onOpenChange={setIsMailOpen}>
               <DialogTrigger asChild>
                 <Pressable>

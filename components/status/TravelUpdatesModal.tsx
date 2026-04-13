@@ -111,7 +111,7 @@ export default function TravelUpdatesModal() {
               onTouchEnd={async () => await getTravelUpdates()}
               disabled={postcardData !== null}
             >
-              <Text>Check Updates</Text>
+              <Text>{postcardData ? "Check Tomorrow!": "Check Updates"}</Text>
             </Button>
             <DialogClose asChild>
               <Button className="w-[47%]">
